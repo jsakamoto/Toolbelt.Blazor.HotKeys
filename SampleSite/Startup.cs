@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Blazor.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Toolbelt.Blazor.Extensions;
 
 namespace SampleSite
 {
@@ -7,6 +8,7 @@ namespace SampleSite
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHotKeysBuilder();
         }
 
         public void Configure(IBlazorApplicationBuilder app)
