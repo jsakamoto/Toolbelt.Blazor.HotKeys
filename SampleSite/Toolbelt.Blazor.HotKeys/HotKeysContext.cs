@@ -1,20 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Toolbelt.Blazor.HotKeys.Internal;
 
 namespace Toolbelt.Blazor.HotKeys
 {
     public class HotKeysContext : IDisposable
     {
+        private HotKeys _HotKeys;
+
         public List<HotKeyEntry> Keys { get; } = new List<HotKeyEntry>();
 
-        internal HotKeysContext()
+        internal HotKeysContext(HotKeys hotKeys)
         {
-            HotKeyDispatcher.KeyDown += HotKeyDispatcher_KeyDown;
+            hotKeys.KeyDown += HotKeyDispatcher_KeyDown;
+            _HotKeys = hotKeys;
         }
 
-        private async void HotKeyDispatcher_KeyDown(object sender, HotKeyDispatchEventArgs e)
+        private async void HotKeyDispatcher_KeyDown(object sender, HotKeyDownEventArgs e)
         {
             foreach (var entry in this.Keys)
             {
@@ -55,7 +57,7 @@ namespace Toolbelt.Blazor.HotKeys
 
         public void Dispose()
         {
-            HotKeyDispatcher.KeyDown -= HotKeyDispatcher_KeyDown;
+            _HotKeys.KeyDown -= HotKeyDispatcher_KeyDown;
         }
     }
 }

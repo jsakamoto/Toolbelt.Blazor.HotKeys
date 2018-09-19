@@ -8,7 +8,7 @@ namespace SampleSite
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddHotKeysBuilder();
+            services.AddHotKeys();
         }
 
         public void Configure(IBlazorApplicationBuilder app)

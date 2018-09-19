@@ -38,5 +38,18 @@ namespace Toolbelt.Blazor.HotKeys
             : this(modKeys, key, allowIn, description, _ => { action(); return Task.CompletedTask; })
         {
         }
+
+        public override string ToString()
+        {
+            return this.ToString("{0}: {1}");
+        }
+
+        public string ToString(string format)
+        {
+            var keyComboText =
+                (this.ModKeys == ModKeys.None ? "" : this.ModKeys.ToString().Replace(", ", "+") + "+") +
+                (this.Key.ToKeyString());
+            return string.Format(format, keyComboText, this.Description);
+        }
     }
 }

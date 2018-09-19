@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Toolbelt.Blazor.HotKeys.Internal
+namespace Toolbelt.Blazor.HotKeys
 {
-    public class HotKeyDispatchEventArgs : EventArgs
+    public class HotKeyDownEventArgs : EventArgs
     {
         public ModKeys ModKeys { get; }
 
@@ -12,7 +12,7 @@ namespace Toolbelt.Blazor.HotKeys.Internal
 
         public bool PreventDefault { get; set; }
 
-        public HotKeyDispatchEventArgs(ModKeys modKeys, Keys keyCode, string srcElementTagName)
+        public HotKeyDownEventArgs(ModKeys modKeys, Keys keyCode, string srcElementTagName)
         {
             ModKeys = modKeys;
             Key = keyCode;

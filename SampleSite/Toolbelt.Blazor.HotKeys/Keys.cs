@@ -2,7 +2,7 @@
 {
     public enum Keys
     {
-        BS = 0x08,
+        Backspace = 0x08,
         Tab = 0x09,
         Enter = 0x0d,
         ESC = 0x1b,
@@ -14,7 +14,7 @@
         Up = 0x26,
         Right = 0x27,
         Down = 0x28,
-        Del = 0x2E,
+        Delete = 0x2E,
         Num0 = 0x30,
         Num1 = 0x31,
         Num2 = 0x32,
