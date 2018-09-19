@@ -1,0 +1,73 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <IsPackable>true</IsPackable>
+    <BlazorLinkOnBuild>false</BlazorLinkOnBuild>
+    <LangVersion>7.3</LangVersion>
+    <TypeScriptToolsVersion>3.0</TypeScriptToolsVersion>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(MSBuildProjectName).xml</DocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <Copyright>Copyright © 2018 J.Sakamoto, Mozilla Public License 2.0</Copyright>
+    <Authors>J.Sakamoto</Authors>
+    <Version>1.0.0.0</Version>  
+    <PackageLicenseUrl>https://github.com/jsakamoto/Toolbelt.Blazor.HotKeys/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/jsakamoto/Toolbelt.Blazor.HotKeys/</PackageProjectUrl>
+    <Description>Configuration-centric keyboard shortcuts for your Blazor apps.</Description>
+    <PackageTags>blazor,hotkey</PackageTags>
+    <PackageReleaseNotes>v.1.0.0
+- 1st release.</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- .js/.css files will be referenced via <script>/<link> tags; other content files will just be included in the app's 'dist' directory without any tags referencing them -->
+    <EmbeddedResource Include="content\**\*.js" LogicalName="blazor:js:%(RecursiveDir)%(Filename)%(Extension)" />
+    <EmbeddedResource Include="content\**\*.css" LogicalName="blazor:css:%(RecursiveDir)%(Filename)%(Extension)" />
+    <EmbeddedResource Include="content\**" Exclude="**\*.js;**\*.css" LogicalName="blazor:file:%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Properties\launchSettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="content\script.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="content\script.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Properties\launchSettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.Browser" Version="0.5.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="0.5.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="content\script.ts" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
+    <TypeScriptModuleKind>None</TypeScriptModuleKind>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
+    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
+    <TypeScriptOutFile />
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptSourceMap>True</TypeScriptSourceMap>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
+  </PropertyGroup>
+
+</Project>

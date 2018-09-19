@@ -9,17 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\script.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Browser" Version="0.5.1" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="0.5.1" />
+    <PackageReference Include="Toolbelt.Blazor.HotKeys" Version="1.0.0" />
     <DotNetCliToolReference Include="Microsoft.AspNetCore.Blazor.Cli" Version="0.5.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <TypeScriptCompile Include="wwwroot\script.ts" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
