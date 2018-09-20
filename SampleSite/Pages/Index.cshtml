@@ -28,8 +28,8 @@ Welcome to your new app.
     protected override void OnInit()
     {
         HotKeysContext = HotKeys.CreateContext()
-            .AddHotKey(ModKeys.None, Keys.F12, DoFetchData, "lorem ipsum.")
-            .AddHotKey(ModKeys.Ctrl | ModKeys.Shift, Keys.A, DoFetchData, "manble funble.", AllowIn.Input | AllowIn.TextArea);
+            .Add(ModKeys.None, Keys.F12, DoFetchData, "lorem ipsum.")
+            .Add(ModKeys.Ctrl | ModKeys.Shift, Keys.A, DoFetchData, "manble funble.", AllowIn.Input | AllowIn.TextArea);
     }
 
     public async Task DoFetchData(HotKeyEntry hotKeyEntry)

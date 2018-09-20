@@ -12,11 +12,11 @@ namespace Toolbelt.Blazor.HotKeys
 
         internal HotKeysContext(HotKeys hotKeys)
         {
-            hotKeys.KeyDown += HotKeyDispatcher_KeyDown;
+            hotKeys.KeyDown += HotKeys_KeyDown;
             _HotKeys = hotKeys;
         }
 
-        private async void HotKeyDispatcher_KeyDown(object sender, HotKeyDownEventArgs e)
+        private async void HotKeys_KeyDown(object sender, HotKeyDownEventArgs e)
         {
             foreach (var entry in this.Keys)
             {
@@ -31,25 +31,25 @@ namespace Toolbelt.Blazor.HotKeys
             }
         }
 
-        public HotKeysContext AddHotKey(ModKeys modKeys, Keys key, Func<HotKeyEntry, Task> action, string description = "", AllowIn allowIn = AllowIn.None)
+        public HotKeysContext Add(ModKeys modKeys, Keys key, Func<HotKeyEntry, Task> action, string description = "", AllowIn allowIn = AllowIn.None)
         {
             this.Keys.Add(new HotKeyEntry(modKeys, key, allowIn, description, action));
             return this;
         }
 
-        public HotKeysContext AddHotKey(ModKeys modKeys, Keys key, Func<Task> action, string description = "", AllowIn allowIn = AllowIn.None)
+        public HotKeysContext Add(ModKeys modKeys, Keys key, Func<Task> action, string description = "", AllowIn allowIn = AllowIn.None)
         {
             this.Keys.Add(new HotKeyEntry(modKeys, key, allowIn, description, action));
             return this;
         }
 
-        public HotKeysContext AddHotKey(ModKeys modKeys, Keys key, Action<HotKeyEntry> action, string description = "", AllowIn allowIn = AllowIn.None)
+        public HotKeysContext Add(ModKeys modKeys, Keys key, Action<HotKeyEntry> action, string description = "", AllowIn allowIn = AllowIn.None)
         {
             this.Keys.Add(new HotKeyEntry(modKeys, key, allowIn, description, action));
             return this;
         }
 
-        public HotKeysContext AddHotKey(ModKeys modKeys, Keys key, Action action, string description = "", AllowIn allowIn = AllowIn.None)
+        public HotKeysContext Add(ModKeys modKeys, Keys key, Action action, string description = "", AllowIn allowIn = AllowIn.None)
         {
             this.Keys.Add(new HotKeyEntry(modKeys, key, allowIn, description, action));
             return this;
@@ -57,7 +57,7 @@ namespace Toolbelt.Blazor.HotKeys
 
         public void Dispose()
         {
-            _HotKeys.KeyDown -= HotKeyDispatcher_KeyDown;
+            _HotKeys.KeyDown -= HotKeys_KeyDown;
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Toolbelt.Blazor.HotKeys;
 
-namespace Toolbelt.Blazor.Extensions
+namespace Toolbelt.Blazor.Extensions.DependencyInjection
 {
     /// <summary>
     /// Extension methods for adding Hoteys service.
