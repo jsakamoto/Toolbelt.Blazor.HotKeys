@@ -1,7 +1,13 @@
 ﻿namespace Toolbelt.Blazor.HotKeys
 {
+    /// <summary>
+    /// The extension methods for "Keys" enum type.
+    /// </summary>
     public static class KeysExtensions
     {
+        /// <summary>
+        /// Returns a String that represent readable key name of this Keys enum value, like "Top", "Left", "Enter", "A", "B", "C", etc.
+        /// </summary>
         public static string ToKeyString(this Keys value)
         {
             switch (value)

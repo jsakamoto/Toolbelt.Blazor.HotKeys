@@ -13,7 +13,7 @@ namespace Toolbelt.Blazor.Extensions.DependencyInjection
         /// <param name="services">The Microsoft.Extensions.DependencyInjection.IServiceCollection to add the service to.</param>
         public static IServiceCollection AddHotKeys(this IServiceCollection services)
         {
-            services.AddSingleton<global::Toolbelt.Blazor.HotKeys.HotKeys>();
+            services.AddSingleton(_ => new global::Toolbelt.Blazor.HotKeys.HotKeys());
             return services;
         }
     }

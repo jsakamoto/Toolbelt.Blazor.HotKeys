@@ -3,7 +3,7 @@
 namespace Toolbelt.Blazor.HotKeys
 {
     /// <summary>
-    /// Constants of modifire keys.
+    /// The flags of modifier keys.
     /// </summary>
     [Flags]
     public enum ModKeys

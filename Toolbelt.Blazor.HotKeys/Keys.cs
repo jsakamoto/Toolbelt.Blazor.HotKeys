@@ -1,5 +1,8 @@
 ﻿namespace Toolbelt.Blazor.HotKeys
 {
+    /// <summary>
+    /// The identifier of the key code.
+    /// </summary>
     public enum Keys
     {
         Backspace = 0x08,
