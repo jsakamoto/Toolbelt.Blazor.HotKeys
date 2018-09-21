@@ -29,7 +29,7 @@ Client-side Blazor v.0.5.1.
 **Step.1** Install the library via NuGet package, like this.
 
 ```shell
-> dotnet install Toolbelt.Blazor.HotKeys
+> dotnet add package Toolbelt.Blazor.HotKeys
 ```
 
 **Step.2** Register "HotKeys" service into the DI container, at `ConfigureService` method in the `Startup` class of your Blazor application.
