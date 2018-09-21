@@ -2,9 +2,25 @@
 
 ## Summary
 
-The library that configuration-centric keyboard shortcuts for your Blazor apps.
+This is a class library that provides configuration-centric keyboard shortcuts for your Blazor apps.
+
+You can declare associations of keyboard shortcut and callback action, like this code:
+
+```csharp
+// The method "OnSelectAll" will be invoked 
+//  when the user typed Ctrl+A key combination.
+this.HotKeysContext = this.HotKeys.CreateContext()
+  .Add(ModKeys.Ctrl, Keys.A, OnSelectAll)
+  .Add(...)
+  ...;
+```
 
 This library was created inspired by ["angular-hotkeys"](https://github.com/chieffancypants/angular-hotkeys).
+
+## Requirements
+
+Client-side Blazor v.0.5.1.
+
 
 ## How to install and use?
 
@@ -80,6 +96,11 @@ Please remember that you have to keep the `HotKeys Context` object in the compon
 }
 ```
 
+> _Note.1:_ You can also specify the async method to the callback action argument.
+
+> _Note.2:_ The method of the callback action can take an argument which is `HotKeyEntry` object.
+
+
 **Step.4** Destroy the `HotKeysContext` when the component is disposing, in the `Dispose()` method of the component.
 
 ```csharp
@@ -120,6 +141,34 @@ The complete source code (.cshtml) of this component is bellow.
     this.HotKeysContext.Dispose();
   }
 }
+```
+
+## Limitations
+
+### Server-side Blazor is not supported
+
+This library doesn't support Server-side Blazor, at this time.
+
+### No "Cheat Sheet"
+
+Unlike ["angular-hotkeys"](https://github.com/chieffancypants/angular-hotkeys), this library doesn't provide "cheat sheet" feature, at this time.
+
+Instead, the `HotKeysContext` object provides `Keys` property, so you can implement your own "Cheat Sheet" UI, like this code:
+
+```csharp
+<ul>
+    @foreach (var key in this.HotKeysContext.Keys)
+    {
+        <li>@key</li>
+    }
+</ul>
+```
+
+The rendering result:
+
+```
+- Shift+Ctrl+A: do foo bar.
+- ...
 ```
 
 ## License
