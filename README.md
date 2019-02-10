@@ -19,7 +19,7 @@ This library was created inspired by ["angular-hotkeys"](https://github.com/chie
 
 ## Requirements
 
-Client-side Blazor v.0.6.0
+Client-side Blazor v.0.8.0
 
 
 ## How to install and use?
@@ -170,6 +170,12 @@ The rendering result:
 - Shift+Ctrl+A: do foo bar.
 - ...
 ```
+
+## Release Note
+
+- **v.2.0.0** - BREAKING CHANGE: Support Blazor v.0.8.0 (not compatible with v.0.7.0 or before.)
+- **v.1.1.0** - Support Blazor v.0.6.0 - it was signed strong name.
+- **v.1.0.0** - 1st release.
 
 ## License
 

@@ -23,23 +23,23 @@ Welcome to your new app.
 
 @functions {
 
-HotKeysContext HotKeysContext;
+    HotKeysContext HotKeysContext;
 
-protected override void OnInit()
-{
-    HotKeysContext = HotKeys.CreateContext()
-        .Add(ModKeys.None, Keys.F12, DoFetchData, "lorem ipsum.")
-        .Add(ModKeys.Ctrl | ModKeys.Shift, Keys.A, DoFetchData, "manble funble.", AllowIn.Input | AllowIn.TextArea);
-}
+    protected override void OnInit()
+    {
+        HotKeysContext = HotKeys.CreateContext()
+            .Add(ModKeys.None, Keys.F12, DoFetchData, "lorem ipsum.")
+            .Add(ModKeys.Ctrl | ModKeys.Shift, Keys.A, DoFetchData, "manble funble.", AllowIn.Input | AllowIn.TextArea);
+    }
 
-public async Task DoFetchData(HotKeyEntry hotKeyEntry)
-{
-    await JSRuntime.Current.InvokeAsync<object>("alert", $"DO-FETCHDATA: Key is: {hotKeyEntry.Key}");
-    Console.WriteLine("[DO-FETCHDATA]");
-}
+    public async Task DoFetchData(HotKeyEntry hotKeyEntry)
+    {
+        await JSRuntime.Current.InvokeAsync<object>("alert", $"DO-FETCHDATA: Key is: {hotKeyEntry.Key}");
+        Console.WriteLine("[DO-FETCHDATA]");
+    }
 
-public void Dispose()
-{
-    HotKeysContext.Dispose();
-}
+    public void Dispose()
+    {
+        HotKeysContext.Dispose();
+    }
 }
