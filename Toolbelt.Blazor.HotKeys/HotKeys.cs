@@ -11,6 +11,8 @@ namespace Toolbelt.Blazor.HotKeys
     {
         private bool _Attached = false;
 
+        private readonly IJSRuntime JSRuntime;
+
         /// <summary>
         /// Occurs when the user enter any keys on the browser.
         /// </summary>
@@ -19,8 +21,9 @@ namespace Toolbelt.Blazor.HotKeys
         /// <summary>
         /// Initialize a new instance of the HotKeys class.
         /// </summary>
-        internal HotKeys()
+        internal HotKeys(IJSRuntime jSRuntime)
         {
+            this.JSRuntime = jSRuntime;
         }
 
         /// <summary>
@@ -29,7 +32,7 @@ namespace Toolbelt.Blazor.HotKeys
         private void Attach()
         {
             if (_Attached) return;
-            JSRuntime.Current.InvokeAsync<object>("Toolbelt.Blazor.HotKeys.attach", new DotNetObjectRef(this));
+            JSRuntime.InvokeAsync<object>("Toolbelt.Blazor.HotKeys.attach", new DotNetObjectRef(this));
             _Attached = true;
         }
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.JSInterop;
 
 namespace Toolbelt.Blazor.Extensions.DependencyInjection
 {
@@ -13,7 +14,7 @@ namespace Toolbelt.Blazor.Extensions.DependencyInjection
         /// <param name="services">The Microsoft.Extensions.DependencyInjection.IServiceCollection to add the service to.</param>
         public static IServiceCollection AddHotKeys(this IServiceCollection services)
         {
-            services.AddSingleton(_ => new global::Toolbelt.Blazor.HotKeys.HotKeys());
+            services.AddSingleton(serviceProvider => new global::Toolbelt.Blazor.HotKeys.HotKeys(serviceProvider.GetService<IJSRuntime>()));
             return services;
         }
     }

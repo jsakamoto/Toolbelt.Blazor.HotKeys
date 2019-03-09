@@ -1,10 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <OutputType>Library</OutputType>
     <IsPackable>true</IsPackable>
-    <BlazorLinkOnBuild>false</BlazorLinkOnBuild>
+    <RestoreAdditionalProjectSources>
+      https://dotnet.myget.org/F/aspnetcore-dev/api/v3/index.json;
+      https://dotnet.myget.org/F/blazor-dev/api/v3/index.json;
+    </RestoreAdditionalProjectSources>
     <LangVersion>7.3</LangVersion>
     <TypeScriptToolsVersion>3.0</TypeScriptToolsVersion>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
@@ -13,12 +15,14 @@
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <Copyright>Copyright © 2018-2019 J.Sakamoto, Mozilla Public License 2.0</Copyright>
     <Authors>J.Sakamoto</Authors>
-    <Version>2.0.0.0</Version>  
-    <PackageLicenseUrl>https://github.com/jsakamoto/Toolbelt.Blazor.HotKeys/blob/master/LICENSE</PackageLicenseUrl>
+    <Version>3.0.0.0</Version>  
+    <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/jsakamoto/Toolbelt.Blazor.HotKeys/</PackageProjectUrl>
     <Description>Configuration-centric keyboard shortcuts for your Blazor apps.</Description>
     <PackageTags>blazor,hotkey</PackageTags>
-    <PackageReleaseNotes>v.2.0.0
+    <PackageReleaseNotes>v.3.0.0
+- BREAKING CHANGE: Support Blazor v.0.9.0 (not compatible with v.0.8.0 or before.)
+v.2.0.0
 - BREAKING CHANGE: Support Blazor v.0.8.0 (not compatible with v.0.7.0 or before.)
 v.1.1.0
 - Support Blazor v.0.6.0 - it was signed strong name.
@@ -50,8 +54,8 @@ v.1.0.0
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Blazor" Version="0.8.0-preview-19104-04" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="0.8.0-preview-19104-04" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Browser" Version="3.0.0-preview3-19153-02" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Build" Version="3.0.0-preview3-19153-02" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
@@ -72,6 +76,7 @@ v.1.0.0
     <TypeScriptSourceMap>True</TypeScriptSourceMap>
     <TypeScriptMapRoot />
     <TypeScriptSourceRoot />
+    <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
   </PropertyGroup>
 
 </Project>

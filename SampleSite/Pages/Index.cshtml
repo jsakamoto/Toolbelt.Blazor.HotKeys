@@ -2,6 +2,7 @@
 @implements IDisposable
 @using Toolbelt.Blazor.HotKeys
 @inject HotKeys HotKeys
+@inject IJSRuntime JSRuntime
 
 <h1>Hello, world!</h1>
 
@@ -34,7 +35,7 @@ Welcome to your new app.
 
     public async Task DoFetchData(HotKeyEntry hotKeyEntry)
     {
-        await JSRuntime.Current.InvokeAsync<object>("alert", $"DO-FETCHDATA: Key is: {hotKeyEntry.Key}");
+        await JSRuntime.InvokeAsync<object>("alert", $"DO-FETCHDATA: Key is: {hotKeyEntry.Key}");
         Console.WriteLine("[DO-FETCHDATA]");
     }
 
