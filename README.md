@@ -1,8 +1,8 @@
-# Blazor HotKeys [![NuGet Package](https://img.shields.io/nuget/v/Toolbelt.Blazor.HotKeys.svg)](https://www.nuget.org/packages/Toolbelt.Blazor.HotKeys/)
+# Blazor (client-side) HotKeys [![NuGet Package](https://img.shields.io/nuget/v/Toolbelt.Blazor.HotKeys.svg)](https://www.nuget.org/packages/Toolbelt.Blazor.HotKeys/)
 
 ## Summary
 
-This is a class library that provides configuration-centric keyboard shortcuts for your Blazor apps.
+This is a class library that provides configuration-centric keyboard shortcuts for your Blazor (client-side) apps.
 
 You can declare associations of keyboard shortcut and callback action, like this code:
 
@@ -19,7 +19,7 @@ This library was created inspired by ["angular-hotkeys"](https://github.com/chie
 
 ## Requirements
 
-Client-side Blazor v.0.9.0
+Client-side Blazor v.3.0.0 Preview 4
 
 
 ## How to install and use?
@@ -45,7 +45,7 @@ public class Startup
     ...
 ```
 
-### 2. Usage in your Blazor component (.cshtml)
+### 2. Usage in your Blazor component (.razor)
 
 **Step.1** Implement `IDisposable` interface to the component.
 
@@ -113,7 +113,7 @@ Please remember that you have to keep the `HotKeys Context` object in the compon
 }
 ```
 
-The complete source code (.cshtml) of this component is bellow.
+The complete source code (.razor) of this component is bellow.
 
 ```csharp
 @page "/"
@@ -145,7 +145,7 @@ The complete source code (.cshtml) of this component is bellow.
 
 ## Limitations
 
-### ASP.NET Core Razor Components (Server-side Blazor) is not supported
+### Server-side Blazor is not supported
 
 This library doesn't support Server-side Blazor, at this time.
 
@@ -173,6 +173,7 @@ The rendering result:
 
 ## Release Note
 
+- **v.4.0.0** - BREAKING CHANGE: Support Blazor v.3.0.0 Preview 4 (not compatible with v.0.9.0 or before.)
 - **v.3.0.0** - BREAKING CHANGE: Support Blazor v.0.9.0 (not compatible with v.0.8.0 or before.)
 - **v.2.0.0** - BREAKING CHANGE: Support Blazor v.0.8.0 (not compatible with v.0.7.0 or before.)
 - **v.1.1.0** - Support Blazor v.0.6.0 - it was signed strong name.
