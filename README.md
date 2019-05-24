@@ -19,7 +19,7 @@ This library was created inspired by ["angular-hotkeys"](https://github.com/chie
 
 ## Requirements
 
-Client-side Blazor v.3.0.0 Preview 4
+Client-side Blazor v.3.0.0 Preview 4~
 
 
 ## How to install and use?
