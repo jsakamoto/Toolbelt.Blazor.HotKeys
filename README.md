@@ -19,7 +19,7 @@ This library was created inspired by ["angular-hotkeys"](https://github.com/chie
 
 ## Requirements
 
-Client-side Blazor v.3.0.0 Preview 4~
+Client-side Blazor v.3.0.0 Preview 6
 
 
 ## How to install and use?
@@ -53,7 +53,7 @@ public class Startup
 @implements IDisposable @* <- Add this at top of the component.  *@
 ...
 
-@functions {
+@code {
   ...
   public void Dispose() // <- Add "Dispose" method.
   {
@@ -77,7 +77,7 @@ You can add the combination with key and action to the `HotKeysContext` object t
 Please remember that you have to keep the `HotKeys Context` object in the component field.
 
 ```csharp
-@functions {
+@code {
 
   HotKeysContext HotKeysContext;
 
@@ -104,7 +104,7 @@ Please remember that you have to keep the `HotKeys Context` object in the compon
 **Step.4** Destroy the `HotKeysContext` when the component is disposing, in the `Dispose()` method of the component.
 
 ```csharp
-@functions {
+@code {
   ...
   public void Dispose()
   {
@@ -121,7 +121,7 @@ The complete source code (.razor) of this component is bellow.
 @using Toolbelt.Blazor.HotKeys
 @inject HotKeys HotKeys
 
-@functions {
+@code {
 
   HotKeysContext HotKeysContext;
 
@@ -173,6 +173,7 @@ The rendering result:
 
 ## Release Note
 
+- **v.5.0.0** - BREAKING CHANGE: Support Blazor v.3.0.0 Preview 6 (not compatible with v.3.0.0 Preview 5 or before.)
 - **v.4.0.0** - BREAKING CHANGE: Support Blazor v.3.0.0 Preview 4 (not compatible with v.0.9.0 or before.)
 - **v.3.0.0** - BREAKING CHANGE: Support Blazor v.0.9.0 (not compatible with v.0.8.0 or before.)
 - **v.2.0.0** - BREAKING CHANGE: Support Blazor v.0.8.0 (not compatible with v.0.7.0 or before.)
