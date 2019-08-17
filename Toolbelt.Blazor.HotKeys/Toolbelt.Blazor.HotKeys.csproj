@@ -13,12 +13,14 @@
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <Copyright>Copyright © 2018-2019 J.Sakamoto, Mozilla Public License 2.0</Copyright>
     <Authors>J.Sakamoto</Authors>
-    <Version>5.0.0.0</Version>
+    <Version>6.0.0.1</Version>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/jsakamoto/Toolbelt.Blazor.HotKeys/</PackageProjectUrl>
     <Description>Configuration-centric keyboard shortcuts for your Blazor apps.</Description>
     <PackageTags>blazor,hotkey</PackageTags>
-    <PackageReleaseNotes>v.5.0.0
+    <PackageReleaseNotes>v.6.0.0
+- BREAKING CHANGE: Support Blazor v.3.0.0 Preview 8 (not compatible with v.3.0.0 Preview 7 or before.)
+v.5.0.0
 - BREAKING CHANGE: Support Blazor v.3.0.0 Preview 6 (not compatible with v.3.0.0 Preview 5 or before.)
 v.4.0.0
 - BREAKING CHANGE: Support Blazor v.3.0.0 Preview 4 (not compatible with v.0.9.0 or before.)
@@ -56,7 +58,8 @@ v.1.0.0
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Browser" Version="3.0.0-preview6.19307.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="3.0.0-preview8.19405.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.0.0-preview8.19405.7" />
   </ItemGroup>
 
   <ItemGroup>

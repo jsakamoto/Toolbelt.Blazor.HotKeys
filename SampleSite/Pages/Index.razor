@@ -16,17 +16,17 @@ Welcome to your new app.
     }
 </ul>
 
-<P>
+<p>
     <input type="text" name="name" value="" />
-</P>
+</p>
 
 <SurveyPrompt Title="How is Blazor working for you?" />
 
-@functions {
+@code {
 
     HotKeysContext HotKeysContext;
 
-    protected override void OnInit()
+    protected override void OnInitialized()
     {
         HotKeysContext = HotKeys.CreateContext()
             .Add(ModKeys.None, Keys.F12, DoFetchData, "lorem ipsum.")

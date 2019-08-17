@@ -1,8 +1,8 @@
-# Blazor (client-side) HotKeys [![NuGet Package](https://img.shields.io/nuget/v/Toolbelt.Blazor.HotKeys.svg)](https://www.nuget.org/packages/Toolbelt.Blazor.HotKeys/)
+# Blazor WebAssembly (client-side) HotKeys [![NuGet Package](https://img.shields.io/nuget/v/Toolbelt.Blazor.HotKeys.svg)](https://www.nuget.org/packages/Toolbelt.Blazor.HotKeys/)
 
 ## Summary
 
-This is a class library that provides configuration-centric keyboard shortcuts for your Blazor (client-side) apps.
+This is a class library that provides configuration-centric keyboard shortcuts for your Blazor WebAssembly (client-side) apps.
 
 You can declare associations of keyboard shortcut and callback action, like this code:
 
@@ -19,7 +19,7 @@ This library was created inspired by ["angular-hotkeys"](https://github.com/chie
 
 ## Requirements
 
-Client-side Blazor v.3.0.0 Preview 6
+Client-side Blazor v.3.0.0 Preview 8
 
 
 ## How to install and use?
@@ -70,7 +70,7 @@ public class Startup
 ...
 ```
 
-**Step.3** Invoke `CreateContext()` method of the `HotKeys` service instance to create and activate hot keys entries at startup of the component such as `OnInit()` method.
+**Step.3** Invoke `CreateContext()` method of the `HotKeys` service instance to create and activate hot keys entries at startup of the component such as `OnInitialized()` method.
 
 You can add the combination with key and action to the `HotKeysContext` object that is returned from `CreateContext()` method, using `Add()` method.
 
@@ -81,7 +81,7 @@ Please remember that you have to keep the `HotKeys Context` object in the compon
 
   HotKeysContext HotKeysContext;
 
-  protected override void OnInit()
+  protected override void OnInitialized()
   {
     this.HotKeysContext = this.HotKeys.CreateContext()
       .Add(ModKeys.Ctrl|ModKeys.Shift, Keys.A, FooBar, "do foo bar.")
@@ -125,7 +125,7 @@ The complete source code (.razor) of this component is bellow.
 
   HotKeysContext HotKeysContext;
 
-  protected override void OnInit()
+  protected override void OnInitialized()
   {
     this.HotKeysContext = this.HotKeys.CreateContext()
       .Add(ModKeys.Ctrl|ModKeys.Shift, Keys.A, FooBar, "do foo bar.");
@@ -173,6 +173,7 @@ The rendering result:
 
 ## Release Note
 
+- **v.6.0.0** - BREAKING CHANGE: Support Blazor v.3.0.0 Preview 8 (not compatible with v.3.0.0 Preview 7 or before.)
 - **v.5.0.0** - BREAKING CHANGE: Support Blazor v.3.0.0 Preview 6 (not compatible with v.3.0.0 Preview 5 or before.)
 - **v.4.0.0** - BREAKING CHANGE: Support Blazor v.3.0.0 Preview 4 (not compatible with v.0.9.0 or before.)
 - **v.3.0.0** - BREAKING CHANGE: Support Blazor v.0.9.0 (not compatible with v.0.8.0 or before.)
