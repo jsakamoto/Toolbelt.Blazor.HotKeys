@@ -17,10 +17,9 @@ this.HotKeysContext = this.HotKeys.CreateContext()
 
 This library was created inspired by ["angular-hotkeys"](https://github.com/chieffancypants/angular-hotkeys).
 
-## Requirements
+## Supported Blazor versions
 
-Client-side Blazor v.3.0.0 Preview 8
-
+"Blazor WebAssembly App (client-side) HotKeys" ver.7.x supports Blazor WebAssembly App version **3.0.0 preview 9.**
 
 ## How to install and use?
 
@@ -173,6 +172,7 @@ The rendering result:
 
 ## Release Note
 
+- **v.7.0.0** - BREAKING CHANGE: Support Blazor v.3.0.0 Preview 9 (not compatible with v.3.0.0 Preview 8 or before.)
 - **v.6.0.0** - BREAKING CHANGE: Support Blazor v.3.0.0 Preview 8 (not compatible with v.3.0.0 Preview 7 or before.)
 - **v.5.0.0** - BREAKING CHANGE: Support Blazor v.3.0.0 Preview 6 (not compatible with v.3.0.0 Preview 5 or before.)
 - **v.4.0.0** - BREAKING CHANGE: Support Blazor v.3.0.0 Preview 4 (not compatible with v.0.9.0 or before.)

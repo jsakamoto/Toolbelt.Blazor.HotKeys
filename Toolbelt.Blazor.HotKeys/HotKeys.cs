@@ -32,7 +32,7 @@ namespace Toolbelt.Blazor.HotKeys
         private void Attach()
         {
             if (_Attached) return;
-            JSRuntime.InvokeAsync<object>("Toolbelt.Blazor.HotKeys.attach", DotNetObjectRef.Create(this));
+            JSRuntime.InvokeAsync<object>("Toolbelt.Blazor.HotKeys.attach", DotNetObjectReference.Create(this));
             _Attached = true;
         }
 
