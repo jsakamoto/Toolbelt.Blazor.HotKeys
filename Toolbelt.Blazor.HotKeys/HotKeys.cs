@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.JSInterop;
 
 namespace Toolbelt.Blazor.HotKeys
@@ -12,6 +14,8 @@ namespace Toolbelt.Blazor.HotKeys
         private bool _Attached = false;
 
         private readonly IJSRuntime JSRuntime;
+
+        private readonly SemaphoreSlim Syncer = new SemaphoreSlim(1, 1);
 
         /// <summary>
         /// Occurs when the user enter any keys on the browser.
@@ -29,11 +33,19 @@ namespace Toolbelt.Blazor.HotKeys
         /// <summary>
         /// Attach this HotKeys service instance to JavaScript DOM event handler.
         /// </summary>
-        private void Attach()
+        private async Task Attach()
         {
             if (_Attached) return;
-            JSRuntime.InvokeAsync<object>("Toolbelt.Blazor.HotKeys.attach", DotNetObjectReference.Create(this));
-            _Attached = true;
+            await Syncer.WaitAsync();
+            try
+            {
+                if (_Attached) return;
+                const string scriptPath = "_content/Toolbelt.Blazor.HotKeys/script.min.js";
+                await JSRuntime.InvokeVoidAsync("eval", "new Promise(r=>((d,t,s)=>(h=>h.querySelector(t+`[src=\"${{s}}\"]`)?r():(e=>(e.src=s,e.onload=r,h.appendChild(e)))(d.createElement(t)))(d.head))(document,'script','" + scriptPath + "'))");
+                await JSRuntime.InvokeVoidAsync("Toolbelt.Blazor.HotKeys.attach", DotNetObjectReference.Create(this));
+                _Attached = true;
+            }
+            finally { Syncer.Release(); }
         }
 
         /// <summary>
@@ -42,7 +54,7 @@ namespace Toolbelt.Blazor.HotKeys
         /// <returns></returns>
         public HotKeysContext CreateContext()
         {
-            Attach();
+            var _ = Attach();
             return new HotKeysContext(this);
         }
 

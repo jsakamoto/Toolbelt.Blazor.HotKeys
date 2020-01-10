@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <IsPackable>true</IsPackable>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>Latest</LangVersion>
     <RazorLangVersion>3.0</RazorLangVersion>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <TypeScriptToolsVersion>3.0</TypeScriptToolsVersion>
@@ -11,14 +11,17 @@
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(MSBuildProjectName).xml</DocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <Copyright>Copyright © 2018-2019 J.Sakamoto, Mozilla Public License 2.0</Copyright>
+    <Copyright>Copyright © 2018-2020 J.Sakamoto, Mozilla Public License 2.0</Copyright>
     <Authors>J.Sakamoto</Authors>
-    <Version>7.0.0.0</Version>
+    <Version>8.0.0.0</Version>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/jsakamoto/Toolbelt.Blazor.HotKeys/</PackageProjectUrl>
     <Description>Configuration-centric keyboard shortcuts for your Blazor apps.</Description>
     <PackageTags>blazor,hotkey</PackageTags>
-    <PackageReleaseNotes>v.7.0.0
+    <PackageReleaseNotes>v.8.0.0
+- BREAKING CHANGE: Support Blazor v.3.1.0 Preview 1 (not compatible with v.3.0.0 Preview 9 or before.)
+- Minify helper JavaScript file.
+v.7.0.0
 - BREAKING CHANGE: Support Blazor v.3.0.0 Preview 9 (not compatible with v.3.0.0 Preview 8 or before.)
 v.6.0.0
 - BREAKING CHANGE: Support Blazor v.3.0.0 Preview 8 (not compatible with v.3.0.0 Preview 7 or before.)
@@ -33,40 +36,25 @@ v.2.0.0
 v.1.1.0
 - Support Blazor v.0.6.0 - it was signed strong name.
 v.1.0.0
-- 1st release.
-</PackageReleaseNotes>
+- 1st release.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- .js/.css files will be referenced via <script>/<link> tags; other content files will just be included in the app's 'dist' directory without any tags referencing them -->
-    <EmbeddedResource Include="content\**\*.js" LogicalName="blazor:js:%(RecursiveDir)%(Filename)%(Extension)" />
-    <EmbeddedResource Include="content\**\*.css" LogicalName="blazor:css:%(RecursiveDir)%(Filename)%(Extension)" />
-    <EmbeddedResource Include="content\**" Exclude="**\*.js;**\*.css" LogicalName="blazor:file:%(RecursiveDir)%(Filename)%(Extension)" />
+    <Content Update="**\*.json">
+      <Pack>false</Pack>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="Properties\launchSettings.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Remove="content\script.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="content\script.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Properties\launchSettings.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="3.0.0-preview9.19424.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.0.0-preview9.19424.4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <TypeScriptCompile Include="content\script.ts" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="3.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.0.0" />
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="3.7.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="BuildBundlerMinifier" Version="3.2.435">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <PropertyGroup>

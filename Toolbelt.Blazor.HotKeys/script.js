@@ -1,3 +1,4 @@
+"use strict";
 var Toolbelt;
 (function (Toolbelt) {
     var Blazor;
@@ -22,4 +23,3 @@ var Toolbelt;
         })(HotKeys = Blazor.HotKeys || (Blazor.HotKeys = {}));
     })(Blazor = Toolbelt.Blazor || (Toolbelt.Blazor = {}));
 })(Toolbelt || (Toolbelt = {}));
-//# sourceMappingURL=script.js.map
