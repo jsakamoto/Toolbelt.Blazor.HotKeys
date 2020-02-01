@@ -31,7 +31,9 @@ This library was created inspired by ["angular-hotkeys"](https://github.com/chie
 > dotnet add package Toolbelt.Blazor.HotKeys
 ```
 
-**Step.2** Register "HotKeys" service into the DI container, at `ConfigureService` method in the `Startup` class of your Blazor application.
+**Step.2** Register "HotKeys" service into the DI container.
+
+If the Blazor version of the project is ver.3.1 preview 4 or earlyer, you should add the code into  `ConfigureService` method in the `Startup` class of your Blazor application.
 
 ```csharp
 using Toolbelt.Blazor.Extensions.DependencyInjection; // <- Add this line, and...
@@ -41,6 +43,21 @@ public class Startup
   public void ConfigureServices(IServiceCollection services)
   {
     services.AddHotKeys(); // <- Add this line.
+    ...
+```
+
+If the Blazor version of the project is ver.3.2 preview 1 or later, you should add the code into  `Main` method in the `Program` class of your Blazor application.
+
+```csharp
+using Toolbelt.Blazor.Extensions.DependencyInjection; // <- Add this line, and...
+...
+public class Program
+{
+  public static async Task Main(string[] args)
+  {
+    var builder = WebAssemblyHostBuilder.CreateDefault(args);
+    ...
+    builder.Services.AddHotKeys(); // <!- Add this line.
     ...
 ```
 
@@ -144,9 +161,9 @@ The complete source code (.razor) of this component is bellow.
 
 ## Limitations
 
-### Server-side Blazor is not supported
+### Server-side Blazor (Blazor Server App) is not supported
 
-This library doesn't support Server-side Blazor, at this time.
+This library doesn't support Server-side Blazor (Blazor Server App), at this time.
 
 ### No "Cheat Sheet"
 
