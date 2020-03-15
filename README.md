@@ -65,7 +65,7 @@ public class Program
 
 **Step.1** Implement `IDisposable` interface to the component.
 
-```html
+```razor
 @implements IDisposable @* <- Add this at top of the component.  *@
 ...
 
@@ -79,7 +79,7 @@ public class Program
 
 **Step.2** Open the `Toolbelt.Blazor.HotKeys` namespace, and inject the `HotKeys` service into the component.
 
-```html
+```razor
 @implements IDisposable
 @using Toolbelt.Blazor.HotKeys @* <- Add this, and ... *@
 @inject HotKeys HotKeys @* <- And add this. *@
@@ -171,7 +171,7 @@ Unlike ["angular-hotkeys"](https://github.com/chieffancypants/angular-hotkeys), 
 
 Instead, the `HotKeysContext` object provides `Keys` property, so you can implement your own "Cheat Sheet" UI, like this code:
 
-```csharp
+```razor
 <ul>
     @foreach (var key in this.HotKeysContext.Keys)
     {
