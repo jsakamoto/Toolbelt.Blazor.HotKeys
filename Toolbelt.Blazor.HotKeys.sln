@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "README", "README", "{BFD814D1-796E-4198-AFCB-74D2E2DC833D}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
+		RELEASE-NOTES.txt = RELEASE-NOTES.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toolbelt.Blazor.HotKeys", "Toolbelt.Blazor.HotKeys\Toolbelt.Blazor.HotKeys.csproj", "{9D25D2C8-2D57-477C-A00C-52E7C2628818}"
