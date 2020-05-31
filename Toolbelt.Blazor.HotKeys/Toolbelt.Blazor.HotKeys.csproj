@@ -18,25 +18,9 @@
     <PackageProjectUrl>https://github.com/jsakamoto/Toolbelt.Blazor.HotKeys/</PackageProjectUrl>
     <Description>Configuration-centric keyboard shortcuts for your Blazor apps.</Description>
     <PackageTags>blazor,hotkey</PackageTags>
-    <PackageReleaseNotes>v.8.0.0
-- BREAKING CHANGE: Support Blazor v.3.1.0 Preview 1 (not compatible with v.3.0.0 Preview 9 or before.)
-- Minify helper JavaScript file.
-v.7.0.0
-- BREAKING CHANGE: Support Blazor v.3.0.0 Preview 9 (not compatible with v.3.0.0 Preview 8 or before.)
-v.6.0.0
-- BREAKING CHANGE: Support Blazor v.3.0.0 Preview 8 (not compatible with v.3.0.0 Preview 7 or before.)
-v.5.0.0
-- BREAKING CHANGE: Support Blazor v.3.0.0 Preview 6 (not compatible with v.3.0.0 Preview 5 or before.)
-v.4.0.0
-- BREAKING CHANGE: Support Blazor v.3.0.0 Preview 4 (not compatible with v.0.9.0 or before.)
-v.3.0.0
-- BREAKING CHANGE: Support Blazor v.0.9.0 (not compatible with v.0.8.0 or before.)
-v.2.0.0
-- BREAKING CHANGE: Support Blazor v.0.8.0 (not compatible with v.0.7.0 or before.)
-v.1.1.0
-- Support Blazor v.0.6.0 - it was signed strong name.
-v.1.0.0
-- 1st release.</PackageReleaseNotes>
+    <PackageReleaseNotes>(Please write the package release notes in "RELEASE NOTES.txt".)</PackageReleaseNotes>
+    <PackageIcon>nupkg-icon.png</PackageIcon>
+    <PackageOutputPath>..\_dist\</PackageOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -73,5 +57,22 @@ v.1.0.0
     <TypeScriptSourceRoot />
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\.assets\nupkg-icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+      <Visible>false</Visible>
+    </None>
+  </ItemGroup>
+
+  <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">
+    <ReadLinesFromFile File="RELEASE-NOTES.txt">
+      <Output TaskParameter="Lines" ItemName="ReleaseNoteLines" />
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
+    </PropertyGroup>
+  </Target>
 
 </Project>
