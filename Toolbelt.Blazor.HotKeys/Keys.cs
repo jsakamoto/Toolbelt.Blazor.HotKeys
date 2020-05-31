@@ -7,8 +7,12 @@
     {
         Backspace = 0x08,
         Tab = 0x09,
+        Shift = 0x10,
+        Ctrl = 0x11,
+        Alt = 0x12,
         Enter = 0x0d,
         ESC = 0x1b,
+        Space = 0x20,
         PgUp = 0x21,
         PgDown = 0x22,
         End = 0x23,

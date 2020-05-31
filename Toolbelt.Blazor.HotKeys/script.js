@@ -8,8 +8,6 @@ var Toolbelt;
             function attach(hotKeysWrpper) {
                 document.addEventListener('keydown', function (ev) {
                     var keyCode = ev.keyCode;
-                    if (0x10 <= keyCode && keyCode <= 0x12)
-                        return;
                     var modKeys = (ev.shiftKey ? 0x01 : 0) +
                         (ev.ctrlKey ? 0x02 : 0) +
                         (ev.altKey ? 0x04 : 0) +

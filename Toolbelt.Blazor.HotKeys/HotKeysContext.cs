@@ -33,8 +33,14 @@ namespace Toolbelt.Blazor.HotKeys
         {
             foreach (var entry in this.Keys)
             {
-                if (entry.ModKeys != e.ModKeys) continue;
                 if (entry.Key != e.Key) continue;
+
+                var modKeys = entry.ModKeys;
+                if (entry.Key == Blazor.HotKeys.Keys.Shift) modKeys |= ModKeys.Shift;
+                if (entry.Key == Blazor.HotKeys.Keys.Ctrl) modKeys |= ModKeys.Ctrl;
+                if (entry.Key == Blazor.HotKeys.Keys.Alt) modKeys |= ModKeys.Alt;
+                if (modKeys != e.ModKeys) continue;
+
                 if (e.SrcElementTagName == "INPUT" && (entry.AllowIn & AllowIn.Input) != AllowIn.Input) continue;
                 if (e.SrcElementTagName == "TEXTAREA" && (entry.AllowIn & AllowIn.TextArea) != AllowIn.TextArea) continue;
 
