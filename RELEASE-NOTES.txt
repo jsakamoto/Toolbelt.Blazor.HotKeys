@@ -1,3 +1,6 @@
+v.8.2.0
+- Add support for meta key (command key on macOS, windows key on windows) pressed.
+
 v.8.1.0
 - Add support for meta keys (Shift, Ctrl, Alt) pressed.
 
