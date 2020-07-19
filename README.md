@@ -19,7 +19,8 @@ This library was created inspired by ["angular-hotkeys"](https://github.com/chie
 
 ## Supported Blazor versions
 
-"Blazor WebAssembly App (client-side) HotKeys" ver.8.x supports Blazor WebAssembly App version **3.1.0 preview 1, or later.**
+"Blazor WebAssembly App (client-side) HotKeys" ver.8.x supports Blazor WebAssembly App version **3.1.0 preview 1, or later.**  
+Of course, Blazor WebAssembly v.3.2 Official release version is also supported.
 
 ## How to install and use?
 
