@@ -1,3 +1,6 @@
+v.8.2.1
+- Use scoped lifecycle for HotKeys service.
+
 v.8.2.0
 - Add support for meta key (command key on macOS, windows key on windows) pressed.
 
