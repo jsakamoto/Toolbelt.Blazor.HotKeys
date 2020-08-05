@@ -30,6 +30,10 @@
             <p>
                 * Input element for the hot key <span class="key">H</span>: <input type="text" value="" class="form-control-sm" />
             </p>
+            <p>The hot key <span class="key">C</span> will work when a non-text input element, like a checkbox or radio, has focus.</p>
+            <p>
+                * Input element for the hot key <span class="key">C</span>: <input type="checkbox" value="" class="form-control-sm" />
+            </p>
         </div>
     </div>
 </div>
@@ -44,7 +48,7 @@
     {
         HotKeysContext = HotKeys.CreateContext()
         .Add(ModKeys.None, Keys.H, _ => GoTo("/"), "Go to Home page.", AllowIn.Input)
-        .Add(ModKeys.None, Keys.C, _ => GoTo("/counter"), "Go to Counter page.")
+        .Add(ModKeys.None, Keys.C, _ => GoTo("/counter"), "Go to Counter page.", AllowIn.NonTextInput)
         .Add(ModKeys.None, Keys.F, _ => GoTo("/fetchdata"), "Go to Fetch data page.")
         .Add(ModKeys.None, Keys.Ctrl, OnCtrlKeyDown, "Double tap to go to Home.")
         ;
