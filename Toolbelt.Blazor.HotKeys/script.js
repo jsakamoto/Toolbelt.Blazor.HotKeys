@@ -12,7 +12,7 @@ var Toolbelt;
                         (ev.ctrlKey ? 0x02 : 0) +
                         (ev.altKey ? 0x04 : 0) +
                         (ev.metaKey ? 0x08 : 0);
-                    var preventDefault = hotKeysWrpper.invokeMethod('OnKeyDown', modKeys, keyCode, ev.srcElement.tagName);
+                    var preventDefault = hotKeysWrpper.invokeMethod('OnKeyDown', modKeys, keyCode, ev.srcElement.tagName, ev.srcElement.getAttribute('type'));
                     if (preventDefault)
                         ev.preventDefault();
                 });

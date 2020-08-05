@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Toolbelt.Blazor.HotKeys
@@ -10,6 +11,14 @@ namespace Toolbelt.Blazor.HotKeys
     public class HotKeysContext : IDisposable
     {
         private HotKeys _HotKeys;
+
+        /// <summary>
+        /// The non text input types that will allow triggers from AllowIn.NonTextInput
+        /// </summary>
+        private static string[] NonTextInputTypes =
+        {
+            "button", "checkbox", "color", "file", "image", "radio", "range", "reset", "submit",
+        };
 
         /// <summary>
         /// The collection of Hotkey entries.
@@ -41,13 +50,30 @@ namespace Toolbelt.Blazor.HotKeys
                 if (entry.Key == Blazor.HotKeys.Keys.Alt) modKeys |= ModKeys.Alt;
                 if (modKeys != e.ModKeys) continue;
 
-                if (e.SrcElementTagName == "INPUT" && (entry.AllowIn & AllowIn.Input) != AllowIn.Input) continue;
-                if (e.SrcElementTagName == "TEXTAREA" && (entry.AllowIn & AllowIn.TextArea) != AllowIn.TextArea) continue;
+                if (!IsAllowedIn(entry, e)) continue;
 
                 e.PreventDefault = true;
 
                 await entry.Action?.Invoke(entry);
             }
+        }
+
+        private bool IsAllowedIn(HotKeyEntry entry, HotKeyDownEventArgs e)
+        {
+            if(e.SrcElementTagName == "TEXTAREA")
+            {
+                return (entry.AllowIn & AllowIn.TextArea) == AllowIn.TextArea;
+            }
+
+            if (e.SrcElementTagName == "INPUT")
+            {
+                if (NonTextInputTypes.Contains(e.SrcElementTypeAttribute)
+                    && (entry.AllowIn & AllowIn.NonTextInput) == AllowIn.NonTextInput) return true;
+
+                return (entry.AllowIn & AllowIn.Input) == AllowIn.Input;
+            }
+
+            return true;
         }
 
         /// <summary>

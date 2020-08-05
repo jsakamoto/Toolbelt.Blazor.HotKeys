@@ -9,7 +9,7 @@
                 (ev.ctrlKey ? 0x02 : 0) +
                 (ev.altKey ? 0x04 : 0) +
                 (ev.metaKey ? 0x08 : 0);
-            let preventDefault = hotKeysWrpper.invokeMethod('OnKeyDown', modKeys, keyCode, (ev.srcElement as HTMLElement).tagName) as boolean;
+            let preventDefault = hotKeysWrpper.invokeMethod('OnKeyDown', modKeys, keyCode, (ev.srcElement as HTMLElement).tagName, (ev.srcElement as HTMLElement).getAttribute('type')) as boolean;
             if (preventDefault) ev.preventDefault();
         });
     }
