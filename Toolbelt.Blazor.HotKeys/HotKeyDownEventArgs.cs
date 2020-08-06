@@ -21,6 +21,11 @@ namespace Toolbelt.Blazor.HotKeys
         /// Get the tag name of HTML element that is source of the DOM event.
         /// </summary>
         public string SrcElementTagName { get; }
+        
+        /// <summary>
+        /// Get the type attribute, if any, of the HTML element that is source of the DOM event.
+        /// </summary>
+        public string SrcElementTypeAttribute { get; }
 
         /// <summary>
         /// Get or set the flag to determine prevent default behavior or not.
@@ -30,11 +35,12 @@ namespace Toolbelt.Blazor.HotKeys
         /// <summary>
         /// Initialize a new instance of the HotKeyDownEventArgs class.
         /// </summary>
-        public HotKeyDownEventArgs(ModKeys modKeys, Keys keyCode, string srcElementTagName)
+        public HotKeyDownEventArgs(ModKeys modKeys, Keys keyCode, string srcElementTagName, string srcElementTypeAttribute)
         {
             ModKeys = modKeys;
             Key = keyCode;
             SrcElementTagName = srcElementTagName;
+            SrcElementTypeAttribute = srcElementTypeAttribute;
         }
     }
 }

@@ -21,6 +21,11 @@ namespace Toolbelt.Blazor.HotKeys
         /// <summary>
         /// The hot key feature also works when the TEXTAREA element has focus.
         /// </summary>
-        TextArea = 0b0010
+        TextArea = 0b0010,
+
+        /// <summary>
+        /// The hot key feature also works when a non-text INPUT element, such as a checkbox or toggle, has focus.
+        /// </summary>
+        NonTextInput = 0b0100,
     }
 }
