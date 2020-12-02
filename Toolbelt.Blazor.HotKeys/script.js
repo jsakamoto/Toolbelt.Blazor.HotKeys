@@ -13,7 +13,7 @@ var Toolbelt;
                     this.allowIn = allowIn;
                 }
                 HotkeyEntry.prototype.action = function () {
-                    this.hotKeyEntryWrpper.invokeMethodAsync('Action');
+                    this.hotKeyEntryWrpper.invokeMethodAsync('InvokeAction');
                 };
                 return HotkeyEntry;
             }());
@@ -75,8 +75,9 @@ var Toolbelt;
                         (ev.altKey ? 4 : 0) +
                         (ev.metaKey ? 8 : 0);
                     var keyCode = ev.keyCode;
-                    var preventDefault = onKeyDown({ modKeys: modKeys, keyCode: keyCode, tagName: ev.srcElement.tagName, type: ev.srcElement.getAttribute('type') });
-                    if (preventDefault)
+                    var preventDefault1 = onKeyDown({ modKeys: modKeys, keyCode: keyCode, tagName: ev.srcElement.tagName, type: ev.srcElement.getAttribute('type') });
+                    var preventDefault2 = hotKeysWrpper.invokeMethod('OnKeyDown', modKeys, keyCode, ev.srcElement.tagName, ev.srcElement.getAttribute('type'));
+                    if (preventDefault1 || preventDefault2)
                         ev.preventDefault();
                 });
             }

@@ -1,5 +1,8 @@
-﻿using System;
+﻿#nullable enable
+using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
+using Microsoft.JSInterop;
 
 namespace Toolbelt.Blazor.HotKeys
 {
@@ -32,6 +35,10 @@ namespace Toolbelt.Blazor.HotKeys
         /// Get the callback action that will be invoked when user enter modKeys + key combination on the browser.
         /// </summary>
         public Func<HotKeyEntry, Task> Action { get; }
+
+        internal int Id = -1;
+
+        internal DotNetObjectReference<HotKeyEntry>? ObjectReference;
 
         /// <summary>
         /// Initialize a new instance of the HotKeyEntry class.
@@ -87,6 +94,12 @@ namespace Toolbelt.Blazor.HotKeys
         public HotKeyEntry(ModKeys modKeys, Keys key, AllowIn allowIn, string description, Action action)
             : this(modKeys, key, allowIn, description, _ => { action(); return Task.CompletedTask; })
         {
+        }
+
+        [JSInvokable(nameof(InvokeAction)), EditorBrowsable(EditorBrowsableState.Never)]
+        public void InvokeAction()
+        {
+            this.Action?.Invoke(this);
         }
 
         /// <summary>

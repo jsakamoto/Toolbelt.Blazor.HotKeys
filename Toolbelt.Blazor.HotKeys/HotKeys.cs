@@ -11,9 +11,9 @@ namespace Toolbelt.Blazor.HotKeys
     /// </summary>
     public class HotKeys
     {
-        private bool _Attached = false;
+        private volatile bool _Attached = false;
 
-        private readonly IJSRuntime JSRuntime;
+        internal readonly IJSRuntime JSRuntime;
 
         private readonly SemaphoreSlim Syncer = new SemaphoreSlim(1, 1);
 
