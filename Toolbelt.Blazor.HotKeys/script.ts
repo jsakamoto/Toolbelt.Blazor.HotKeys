@@ -95,7 +95,6 @@
     }
 
     export function attach(hotKeysWrpper: any): void {
-
         document.addEventListener('keydown', ev => {
             const modKeys =
                 (ev.shiftKey ? ModKeys.Shift : 0) +
@@ -103,9 +102,9 @@
                 (ev.altKey ? ModKeys.Alt : 0) +
                 (ev.metaKey ? ModKeys.Meta : 0);
             const keyCode = ev.keyCode;
-            const preventDefault1 = onKeyDown({ modKeys, keyCode, tagName: (ev.srcElement as HTMLElement).tagName, type: (ev.srcElement as HTMLElement).getAttribute('type') });
-            const preventDefault2 = hotKeysWrpper.invokeMethod('OnKeyDown', modKeys, keyCode, (ev.srcElement as HTMLElement).tagName, (ev.srcElement as HTMLElement).getAttribute('type')) as boolean;
-            if (preventDefault1 || preventDefault2) ev.preventDefault();
+            const preventDefault = onKeyDown({ modKeys, keyCode, tagName: (ev.srcElement as HTMLElement).tagName, type: (ev.srcElement as HTMLElement).getAttribute('type') });
+            if (preventDefault) ev.preventDefault();
+            hotKeysWrpper.invokeMethodAsync('OnKeyDown', modKeys, keyCode, (ev.srcElement as HTMLElement).tagName, (ev.srcElement as HTMLElement).getAttribute('type'));
         });
     }
 }

@@ -68,17 +68,17 @@ var Toolbelt;
                 }
                 return true;
             }
-            function attach() {
+            function attach(hotKeysWrpper) {
                 document.addEventListener('keydown', function (ev) {
                     var modKeys = (ev.shiftKey ? 1 : 0) +
                         (ev.ctrlKey ? 2 : 0) +
                         (ev.altKey ? 4 : 0) +
                         (ev.metaKey ? 8 : 0);
                     var keyCode = ev.keyCode;
-                    var preventDefault1 = onKeyDown({ modKeys: modKeys, keyCode: keyCode, tagName: ev.srcElement.tagName, type: ev.srcElement.getAttribute('type') });
-                    var preventDefault2 = hotKeysWrpper.invokeMethod('OnKeyDown', modKeys, keyCode, ev.srcElement.tagName, ev.srcElement.getAttribute('type'));
-                    if (preventDefault1 || preventDefault2)
+                    var preventDefault = onKeyDown({ modKeys: modKeys, keyCode: keyCode, tagName: ev.srcElement.tagName, type: ev.srcElement.getAttribute('type') });
+                    if (preventDefault)
                         ev.preventDefault();
+                    hotKeysWrpper.invokeMethodAsync('OnKeyDown', modKeys, keyCode, ev.srcElement.tagName, ev.srcElement.getAttribute('type'));
                 });
             }
             HotKeys.attach = attach;

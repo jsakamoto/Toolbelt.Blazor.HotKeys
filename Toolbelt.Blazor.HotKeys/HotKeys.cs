@@ -13,7 +13,7 @@ namespace Toolbelt.Blazor.HotKeys
     {
         private volatile bool _Attached = false;
 
-        internal readonly IJSRuntime JSRuntime;
+        private readonly IJSRuntime JSRuntime;
 
         private readonly SemaphoreSlim Syncer = new SemaphoreSlim(1, 1);
 
@@ -54,8 +54,8 @@ namespace Toolbelt.Blazor.HotKeys
         /// <returns></returns>
         public HotKeysContext CreateContext()
         {
-            var _ = Attach();
-            return new HotKeysContext(this);
+            var attachTask = Attach();
+            return new HotKeysContext(this.JSRuntime, attachTask);
         }
 
         /// <summary>
