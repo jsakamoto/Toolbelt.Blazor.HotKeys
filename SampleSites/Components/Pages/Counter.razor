@@ -1,4 +1,6 @@
 ﻿@page "/counter"
+@implements IDisposable
+@inject HotKeys HotKeys
 
 <h1>Counter</h1>
 
@@ -9,8 +11,22 @@
 @code {
     private int currentCount = 0;
 
+    private HotKeysContext HotKeysContext;
+
+    protected override void OnInitialized()
+    {
+        this.HotKeysContext = this.HotKeys.CreateContext()
+            .Add(ModKeys.None, Keys.U, () => this.IncrementCount());
+    }
+
     private void IncrementCount()
     {
         currentCount++;
+        this.StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        this.HotKeysContext?.Dispose();
     }
 }

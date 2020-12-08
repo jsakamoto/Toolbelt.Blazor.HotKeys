@@ -1,6 +1,5 @@
 ﻿@inherits LayoutComponentBase
 @implements IDisposable
-@using Toolbelt.Blazor.HotKeys
 @inject HotKeys HotKeys
 @inject NavigationManager NavigationManager
 
@@ -56,6 +55,8 @@
         .Add(ModKeys.None, Keys.F, _ => GoTo("/fetchdata"), "Go to Fetch data page.")
         .Add(ModKeys.None, Keys.Ctrl, OnCtrlKeyDown, "Double tap to go to Home.")
         ;
+
+        HotKeys.KeyDown += HotKeys_KeyDown;
     }
 
     private Task GoTo(string url)
@@ -72,6 +73,15 @@
         if ((DateTime.Now - lastCtrlKeyPressed).TotalMilliseconds <= 200)
         {
             this.GoTo("/");
+        }
+    }
+
+    private void HotKeys_KeyDown(object sender, HotKeyDownEventArgs e)
+    {
+        if (e.Key == Keys.A)
+        {
+            e.PreventDefault = true;
+            //GoTo("/counter");
         }
     }
 
