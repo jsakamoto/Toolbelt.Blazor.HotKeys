@@ -6,6 +6,8 @@ This is a class library that provides configuration-centric keyboard shortcuts f
 
 ![movie](https://raw.githubusercontent.com/jsakamoto/Toolbelt.Blazor.HotKeys/master/.assets/movie-001.gif)
 
+- [Live demo](https://jsakamoto.github.io/Toolbelt.Blazor.HotKeys/)
+
 You can declare associations of keyboard shortcut and callback action, like this code:
 
 ```csharp
