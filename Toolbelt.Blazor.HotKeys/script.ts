@@ -102,10 +102,12 @@
                 (ev.altKey ? ModKeys.Alt : 0) +
                 (ev.metaKey ? ModKeys.Meta : 0);
             const keyCode = ev.keyCode;
-            const preventDefault1 = onKeyDown({ modKeys, keyCode, tagName: (ev.srcElement as HTMLElement).tagName, type: (ev.srcElement as HTMLElement).getAttribute('type') });
-            const preventDefault2 = isWasm === true ? hotKeysWrpper.invokeMethod('OnKeyDown', modKeys, keyCode, (ev.srcElement as HTMLElement).tagName, (ev.srcElement as HTMLElement).getAttribute('type')) : false;
+            const tagName = (ev.srcElement as HTMLElement).tagName;
+            const type = (ev.srcElement as HTMLElement).getAttribute('type');
+            const preventDefault1 = onKeyDown({ modKeys, keyCode, tagName, type });
+            const preventDefault2 = isWasm === true ? hotKeysWrpper.invokeMethod('OnKeyDown', modKeys, keyCode, tagName, type) : false;
             if (preventDefault1 || preventDefault2) ev.preventDefault();
-            if (isWasm === false) hotKeysWrpper.invokeMethodAsync('OnKeyDown', modKeys, keyCode, (ev.srcElement as HTMLElement).tagName, (ev.srcElement as HTMLElement).getAttribute('type'));
+            if (isWasm === false) hotKeysWrpper.invokeMethodAsync('OnKeyDown', modKeys, keyCode, tagName, type);
         });
     }
 }

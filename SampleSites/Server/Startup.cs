@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using SampleSite.Components.Services;
 using SampleSite.Server.Data;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
+using Toolbelt.Extensions.DependencyInjection;
 
 namespace SampleSite.Server
 {
@@ -43,6 +44,7 @@ namespace SampleSite.Server
             }
 
             app.UseHttpsRedirection();
+            app.UseCssLiveReload();
             app.UseStaticFiles();
 
             app.UseRouting();
