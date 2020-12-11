@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
@@ -11,11 +12,13 @@ namespace Toolbelt.Blazor.HotKeys
     /// </summary>
     public class HotKeys
     {
-        private bool _Attached = false;
+        private volatile bool _Attached = false;
 
         private readonly IJSRuntime JSRuntime;
 
         private readonly SemaphoreSlim Syncer = new SemaphoreSlim(1, 1);
+
+        private readonly bool IsWasm = RuntimeInformation.OSDescription == "web" || RuntimeInformation.OSDescription == "Browser";
 
         /// <summary>
         /// Occurs when the user enter any keys on the browser.
@@ -42,7 +45,7 @@ namespace Toolbelt.Blazor.HotKeys
                 if (_Attached) return;
                 const string scriptPath = "_content/Toolbelt.Blazor.HotKeys/script.min.js";
                 await JSRuntime.InvokeVoidAsync("eval", "new Promise(r=>((d,t,s)=>(h=>h.querySelector(t+`[src=\"${{s}}\"]`)?r():(e=>(e.src=s,e.onload=r,h.appendChild(e)))(d.createElement(t)))(d.head))(document,'script','" + scriptPath + "'))");
-                await JSRuntime.InvokeVoidAsync("Toolbelt.Blazor.HotKeys.attach", DotNetObjectReference.Create(this));
+                await JSRuntime.InvokeVoidAsync("Toolbelt.Blazor.HotKeys.attach", DotNetObjectReference.Create(this), IsWasm);
                 _Attached = true;
             }
             finally { Syncer.Release(); }
@@ -54,8 +57,8 @@ namespace Toolbelt.Blazor.HotKeys
         /// <returns></returns>
         public HotKeysContext CreateContext()
         {
-            var _ = Attach();
-            return new HotKeysContext(this);
+            var attachTask = Attach();
+            return new HotKeysContext(this.JSRuntime, attachTask);
         }
 
         /// <summary>
@@ -69,7 +72,7 @@ namespace Toolbelt.Blazor.HotKeys
         [JSInvokable(nameof(OnKeyDown)), EditorBrowsable(EditorBrowsableState.Never)]
         public bool OnKeyDown(ModKeys modKeys, Keys keyCode, string srcElementTagName, string srcElementTypeName)
         {
-            var args = new HotKeyDownEventArgs(modKeys, keyCode, srcElementTagName, srcElementTypeName);
+            var args = new HotKeyDownEventArgs(modKeys, keyCode, srcElementTagName, srcElementTypeName, IsWasm);
             KeyDown?.Invoke(null, args);
             return args.PreventDefault;
         }
