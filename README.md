@@ -1,8 +1,10 @@
-# Blazor WebAssembly (client-side) HotKeys [![NuGet Package](https://img.shields.io/nuget/v/Toolbelt.Blazor.HotKeys.svg)](https://www.nuget.org/packages/Toolbelt.Blazor.HotKeys/)
+# Blazor HotKeys [![NuGet Package](https://img.shields.io/nuget/v/Toolbelt.Blazor.HotKeys.svg)](https://www.nuget.org/packages/Toolbelt.Blazor.HotKeys/)
 
 ## Summary
 
-This is a class library that provides configuration-centric keyboard shortcuts for your Blazor WebAssembly (client-side) apps.
+This is a class library that provides configuration-centric keyboard shortcuts for your Blazor apps.
+
+<img src=".assets/movie-001.gif" style="max-width:480px;" />
 
 You can declare associations of keyboard shortcut and callback action, like this code:
 
@@ -19,8 +21,9 @@ This library was created inspired by ["angular-hotkeys"](https://github.com/chie
 
 ## Supported Blazor versions
 
+"Blazor HotKeys" ver.9.x supports both Blazor WebAssembly and Blazor Server.
 
-"Blazor WebAssembly App (client-side) HotKeys" ver.8.x supports Blazor WebAssembly versions below.
+Supported Blazor versions are as below.
 
 - v.3.1
     - including previews and release candidates.
@@ -168,10 +171,6 @@ The complete source code (.razor) of this component is bellow.
 ```
 
 ## Limitations
-
-### Server-side Blazor (Blazor Server App) is not supported
-
-This library doesn't support Server-side Blazor (Blazor Server App), at this time.
 
 ### No "Cheat Sheet"
 
