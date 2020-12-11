@@ -71,7 +71,8 @@
 
     private Task GoTo(string url)
     {
-        NavigationManager.NavigateTo(url);
+        var urlToNavigate = NavigationManager.BaseUri.TrimEnd('/') + "/" + url.TrimStart('/');
+        NavigationManager.NavigateTo(urlToNavigate);
         return Task.CompletedTask;
     }
 

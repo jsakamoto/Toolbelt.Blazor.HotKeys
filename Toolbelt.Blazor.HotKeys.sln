@@ -19,7 +19,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleSite.Client", "Sample
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleSite.Server", "SampleSites\Server\SampleSite.Server.csproj", "{A3F4C027-0211-4720-B553-1019883168C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toolbelt.Blazor.HotKeys.Test", "Toolbelt.Blazor.HotKeys.Test\Toolbelt.Blazor.HotKeys.Test.csproj", "{153FFB52-59E9-4716-8C7C-BFCE9F08404F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toolbelt.Blazor.HotKeys.Test", "Toolbelt.Blazor.HotKeys.Test\Toolbelt.Blazor.HotKeys.Test.csproj", "{153FFB52-59E9-4716-8C7C-BFCE9F08404F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E84D883A-E6DE-465D-999C-39E63BF7B261}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\gh-pages.yml = .github\workflows\gh-pages.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
