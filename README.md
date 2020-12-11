@@ -4,7 +4,7 @@
 
 This is a class library that provides configuration-centric keyboard shortcuts for your Blazor apps.
 
-<img src="https://raw.githubusercontent.com/jsakamoto/Toolbelt.Blazor.HotKeys/master/.assets/movie-001.gif" style="max-width:480px;" />
+![movie](https://raw.githubusercontent.com/jsakamoto/Toolbelt.Blazor.HotKeys/master/.assets/movie-001.gif)
 
 You can declare associations of keyboard shortcut and callback action, like this code:
 
