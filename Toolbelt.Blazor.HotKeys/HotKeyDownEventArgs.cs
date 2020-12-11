@@ -35,7 +35,9 @@ namespace Toolbelt.Blazor.HotKeys
         private bool _PreventDefault;
 
         /// <summary>
-        /// Get or set the flag to determine prevent default behavior or not.
+        /// Get or set the flag to determine prevent default behavior or not.<br/>
+        /// [IMPORTANT NOTICE] When set this property to true on a Blazor Server App (not a WebAssembly app), <see cref="InvalidOperationException"/> will be thrown. <br/>
+        /// ("PreventDefault" behavior is not supported on Blazor Server App.)
         /// </summary>
         public bool PreventDefault
         {
