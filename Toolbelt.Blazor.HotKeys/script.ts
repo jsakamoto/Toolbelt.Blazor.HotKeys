@@ -43,7 +43,7 @@
     export function register(hotKeyEntryWrpper: any, modKeys: ModKeys, key: number, allowIn: AllowIn): number {
         const id = idSeq++;
         const hotKeyEntry = new HotkeyEntry(hotKeyEntryWrpper, modKeys, key, allowIn);
-        hotKeyEntries[idSeq] = hotKeyEntry;
+        hotKeyEntries[id] = hotKeyEntry;
         return id;
     }
 
@@ -52,7 +52,6 @@
     }
 
     function onKeyDown(e: { modKeys: ModKeys, keyCode: number, tagName: string, type: string | null }): boolean {
-
         let preventDefault = false;
 
         for (const key in hotKeyEntries) {

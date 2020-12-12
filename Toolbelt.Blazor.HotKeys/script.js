@@ -23,7 +23,7 @@ var Toolbelt;
             function register(hotKeyEntryWrpper, modKeys, key, allowIn) {
                 var id = idSeq++;
                 var hotKeyEntry = new HotkeyEntry(hotKeyEntryWrpper, modKeys, key, allowIn);
-                hotKeyEntries[idSeq] = hotKeyEntry;
+                hotKeyEntries[id] = hotKeyEntry;
                 return id;
             }
             HotKeys.register = register;
