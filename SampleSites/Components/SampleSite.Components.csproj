@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.0" />
-    <PackageReference InclKude="Toolbelt.Blazor.HotKeys" Version="9.0.1" />
+    <PackageReference Include="Toolbelt.Blazor.HotKeys" Version="9.0.1" />
   </ItemGroup>
 
 </Project>
