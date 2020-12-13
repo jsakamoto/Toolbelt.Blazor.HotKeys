@@ -24,7 +24,7 @@
     align-items: center;
     opacity: 0;
     visibility: hidden;
-    transition: opacity linear 0.2s;
+    transition: visibility linear 0.2s, opacity linear 0.2s;
 }
 
     .popup-container.visible {
