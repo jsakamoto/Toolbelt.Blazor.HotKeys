@@ -8,7 +8,7 @@ namespace Toolbelt.Blazor.HotKeys.Test
         [Test]
         public void SetPreventDefault_to_True_Throws_Exception_on_BlazorServer()
         {
-            var args = new HotKeyDownEventArgs(ModKeys.None, Keys.A, "INPUT", "text", isWasm: false);
+            var args = new HotKeyDownEventArgs(ModKeys.None, Keys.A, "INPUT", "text", isWasm: false, nativeKey: "a", nativeCode: "KeyA");
             Assert.Throws<InvalidOperationException>(() =>
             {
                 args.PreventDefault = true;
@@ -18,7 +18,7 @@ namespace Toolbelt.Blazor.HotKeys.Test
         [Test]
         public void SetPreventDefault_to_False_on_BlazorServer()
         {
-            var args = new HotKeyDownEventArgs(ModKeys.None, Keys.A, "INPUT", "text", isWasm: false);
+            var args = new HotKeyDownEventArgs(ModKeys.None, Keys.A, "INPUT", "text", isWasm: false, nativeKey: "a", nativeCode: "KeyA");
             args.PreventDefault.IsFalse();
             args.PreventDefault = false;
             args.PreventDefault.IsFalse();
@@ -27,7 +27,7 @@ namespace Toolbelt.Blazor.HotKeys.Test
         [Test]
         public void SetPreventDefault_Success_on_BlazorWebAssembly()
         {
-            var args = new HotKeyDownEventArgs(ModKeys.None, Keys.A, "INPUT", "text", isWasm: true);
+            var args = new HotKeyDownEventArgs(ModKeys.None, Keys.A, "INPUT", "text", isWasm: true, nativeKey: "a", nativeCode: "KeyA");
             args.PreventDefault.IsFalse();
             args.PreventDefault = true;
             args.PreventDefault.IsTrue();

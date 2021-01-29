@@ -1,0 +1,66 @@
+﻿<div class="entered-keys">
+    <table>
+        <thead>
+            <tr>
+                <th>ModKeys</th>
+                <th>Key</th>
+                @if (ShowNativeKeyAndCode)
+                {
+                    <th>Native Key</th>
+                    <th>Native Code</th>
+                }
+                <th>Repeat</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var enteredKey in EnteredKeys)
+            {
+                <tr @key="enteredKey.Id">
+                    <td>@(enteredKey.ModKeys == ModKeys.None ? "" : enteredKey.ModKeys.ToString())</td>
+                    <td>@enteredKey.KeyName</td>
+                    @if (ShowNativeKeyAndCode)
+                    {
+                        <td>@enteredKey.Key</td>
+                        <td>@enteredKey.Code</td>
+                    }
+                    <td>x @enteredKey.RepeatCount</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code{
+    [Parameter]
+    public bool ShowNativeKeyAndCode { get; set; }
+
+    private readonly List<EnteredKey> EnteredKeys = new();
+
+    private EnteredKey LastEnteredKey = null;
+
+    public void OnEnteredKey(HotKeyEntry hotKeyEntry)
+    {
+        OnEnteredKey(new EnteredKey(hotKeyEntry.ModKeys, hotKeyEntry.Key.ToString()));
+    }
+
+    public void OnEnteredKey(HotKeyDownEventArgs e)
+    {
+        OnEnteredKey(new EnteredKey(e.ModKeys, e.Key.ToString(), e.NativeKey, e.NativeCode));
+    }
+
+    public void OnEnteredKey(EnteredKey enteredKey)
+    {
+        if (LastEnteredKey == enteredKey)
+        {
+            LastEnteredKey.RepeatCount++;
+        }
+        else
+        {
+            LastEnteredKey = enteredKey;
+            EnteredKeys.Insert(0, enteredKey);
+            if (EnteredKeys.Count > 10) EnteredKeys.RemoveAt(10);
+        }
+        this.StateHasChanged();
+    }
+
+}

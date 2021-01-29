@@ -1,0 +1,53 @@
+﻿@page "/test/bykeys"
+@implements IDisposable
+@inject HotKeys HotKeys
+
+<h1>Test All Keys</h1>
+
+<EnteredKeyList @ref="EnteredKeyList" />
+
+@code{
+    private EnteredKeyList EnteredKeyList;
+
+    private HotKeysContext HotKeysContext;
+
+    protected override void OnInitialized()
+    {
+        this.HotKeysContext = this.HotKeys.CreateContext();
+
+        var modKeysCombinations = new[] {
+            ModKeys.Shift,
+            ModKeys.Ctrl,
+            ModKeys.Shift | ModKeys.Ctrl,
+            ModKeys.Alt,
+            ModKeys.Alt | ModKeys.Shift,
+            ModKeys.Alt | ModKeys.Ctrl,
+            ModKeys.Alt | ModKeys.Ctrl | ModKeys.Shift
+        };
+
+        foreach (var key in Enum.GetValues<Keys>())
+        {
+            this.HotKeysContext.Add(ModKeys.None, key, OnHotKey);
+
+            foreach (var modKeys in modKeysCombinations)
+            {
+                if (key == Keys.Shift && modKeys.HasFlag(ModKeys.Shift)) continue;
+                if (key == Keys.Ctrl && modKeys.HasFlag(ModKeys.Ctrl)) continue;
+                if (key == Keys.Alt && modKeys.HasFlag(ModKeys.Alt)) continue;
+
+                this.HotKeysContext.Add(modKeys, key, OnHotKey);
+            }
+        }
+    }
+
+    private void OnHotKey(HotKeyEntry hotKeyEntry)
+    {
+        EnteredKeyList.OnEnteredKey(hotKeyEntry);
+    }
+
+    public void Dispose()
+    {
+        this.HotKeysContext?.Dispose();
+    }
+
+}
