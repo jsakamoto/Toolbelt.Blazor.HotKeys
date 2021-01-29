@@ -1,3 +1,10 @@
+v.10.0.0
+- Use "key" and "code" properties of the keyboard event object instead of the "keyCode" that was deprecated.
+  [NOTICE] Please be careful that this change might be a breaking change for your applications.
+- Add media keys support (pause, next track, previous track).
+- Added new overload versions of "HotKeysContext.Add()" methods those are accepted key name as a string.
+- Expose native "key" and "code" properties in the OnKeyDown event argument.
+
 v.9.0.1
 - Fix: "DotNetObjectReference instance was already disposed" error was often happened.
 

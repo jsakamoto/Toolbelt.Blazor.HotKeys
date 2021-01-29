@@ -23,7 +23,7 @@ This library was created inspired by ["angular-hotkeys"](https://github.com/chie
 
 ## Supported Blazor versions
 
-"Blazor HotKeys" ver.9.x supports both Blazor WebAssembly and Blazor Server.
+"Blazor HotKeys" ver.9.x or later supports both Blazor WebAssembly and Blazor Server.
 
 Supported Blazor versions are as below.
 
