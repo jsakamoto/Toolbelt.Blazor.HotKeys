@@ -78,15 +78,17 @@ var Toolbelt;
                         (ev.ctrlKey ? 2 : 0) +
                         (ev.altKey ? 4 : 0) +
                         (ev.metaKey ? 8 : 0);
+                    var key = ev.key;
+                    var code = ev.code;
                     var keyName = convertToKeyName(ev);
                     var tagName = ev.srcElement.tagName;
                     var type = ev.srcElement.getAttribute('type');
                     var preventDefault1 = onKeyDown({ modKeys: modKeys, keyName: keyName, tagName: tagName, type: type });
-                    var preventDefault2 = isWasm === true ? hotKeysWrpper.invokeMethod('OnKeyDown', modKeys, keyName, tagName, type) : false;
+                    var preventDefault2 = isWasm === true ? hotKeysWrpper.invokeMethod('OnKeyDown', modKeys, keyName, tagName, type, key, code) : false;
                     if (preventDefault1 || preventDefault2)
                         ev.preventDefault();
                     if (isWasm === false)
-                        hotKeysWrpper.invokeMethodAsync('OnKeyDown', modKeys, keyName, tagName, type);
+                        hotKeysWrpper.invokeMethodAsync('OnKeyDown', modKeys, keyName, tagName, type, key, code);
                 });
             }
             HotKeys.attach = attach;

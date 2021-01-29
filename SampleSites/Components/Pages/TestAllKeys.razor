@@ -1,31 +1,15 @@
-﻿@page "/test"
+﻿@page "/test/bykeys"
 @implements IDisposable
 @inject HotKeys HotKeys
 
 <h1>Test All Keys</h1>
 
-<div class="entered-keys">
-    @foreach (var enteredKey in EnteredKeys)
-    {
-        <div @key="enteredKey.Id">@enteredKey.Text x @enteredKey.RepeatCount</div>
-    }
-</div>
+<EnteredKeyList @ref="EnteredKeyList" />
 
 @code{
-    public class EnteredKey
-    {
-        public readonly Guid Id = Guid.NewGuid();
-
-        public string Text;
-
-        public int RepeatCount = 1;
-    }
+    private EnteredKeyList EnteredKeyList;
 
     private HotKeysContext HotKeysContext;
-
-    private readonly List<EnteredKey> EnteredKeys = new();
-
-    private EnteredKey LastEnteredKey = null;
 
     protected override void OnInitialized()
     {
@@ -58,19 +42,7 @@
 
     private void OnHotKey(HotKeyEntry hotKeyEntry)
     {
-        var text = (hotKeyEntry.ModKeys == ModKeys.None ? "" : (hotKeyEntry.ModKeys.ToString() + " + ")) + hotKeyEntry.Key.ToString();
-        if (LastEnteredKey?.Text == text)
-        {
-            LastEnteredKey.RepeatCount++;
-        }
-        else
-        {
-            var enteredKey = new EnteredKey { Text = text };
-            LastEnteredKey = enteredKey;
-            EnteredKeys.Insert(0, enteredKey);
-            if (EnteredKeys.Count > 10) EnteredKeys.RemoveAt(10);
-        }
-        this.StateHasChanged();
+        EnteredKeyList.OnEnteredKey(hotKeyEntry);
     }
 
     public void Dispose()

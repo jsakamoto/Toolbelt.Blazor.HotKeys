@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace Toolbelt.Blazor.HotKeys
 {
@@ -16,6 +17,18 @@ namespace Toolbelt.Blazor.HotKeys
         /// Get the identifier of the key that is pressed.
         /// </summary>
         public Keys Key { get; }
+
+        /// <summary>
+        /// Get the value of the "key" property in the HTML Keyboard event object, that taking into consideration the state of modifier keys such as Shift as well as the keyboard locale and layout.<br/>
+        /// (https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values)
+        /// </summary>
+        public string NativeKey { get; }
+
+        /// <summary>
+        /// Get the value of the "code" property in the HTML Keyboard event object, taht represents a physical key on the keyboard.<br/>
+        /// (https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code/code_values)
+        /// </summary>
+        public string NativeCode { get; }
 
         /// <summary>
         /// Get the tag name of HTML element that is source of the DOM event.
@@ -48,21 +61,33 @@ namespace Toolbelt.Blazor.HotKeys
         /// <summary>
         /// Initialize a new instance of the HotKeyDownEventArgs class.
         /// </summary>
+        [Obsolete, EditorBrowsable(EditorBrowsableState.Never)]
         public HotKeyDownEventArgs(ModKeys modKeys, Keys keyCode, string srcElementTagName, string srcElementTypeAttribute)
-            : this(modKeys, keyCode, srcElementTagName, srcElementTypeAttribute, isWasm: false)
+            : this(modKeys, keyCode, srcElementTagName, srcElementTypeAttribute, isWasm: false, nativeCode: "", nativeKey: "")
         {
         }
 
         /// <summary>
         /// Initialize a new instance of the HotKeyDownEventArgs class.
         /// </summary>
+        [Obsolete, EditorBrowsable(EditorBrowsableState.Never)]
         public HotKeyDownEventArgs(ModKeys modKeys, Keys keyCode, string srcElementTagName, string srcElementTypeAttribute, bool isWasm)
+            : this(modKeys, keyCode, srcElementTagName, srcElementTypeAttribute, isWasm, nativeCode: "", nativeKey: "")
+        {
+        }
+
+        /// <summary>
+        /// Initialize a new instance of the HotKeyDownEventArgs class.
+        /// </summary>
+        public HotKeyDownEventArgs(ModKeys modKeys, Keys keyCode, string srcElementTagName, string srcElementTypeAttribute, bool isWasm, string nativeKey, string nativeCode)
         {
             ModKeys = modKeys;
             Key = keyCode;
             SrcElementTagName = srcElementTagName;
             SrcElementTypeAttribute = srcElementTypeAttribute;
             IsWasm = isWasm;
+            NativeKey = nativeKey ?? "";
+            NativeCode = nativeCode ?? "";
         }
     }
 }
