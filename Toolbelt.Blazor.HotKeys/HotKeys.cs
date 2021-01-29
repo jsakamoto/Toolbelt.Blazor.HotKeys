@@ -65,13 +65,14 @@ namespace Toolbelt.Blazor.HotKeys
         /// The method that will be invoked from JavaScript keydown event handler.
         /// </summary>
         /// <param name="modKeys">The combination of modifier keys flags.</param>
-        /// <param name="keyCode">The identifier of hotkey.</param>
+        /// <param name="keyName">The identifier of hotkey.</param>
         /// <param name="srcElementTagName">The tag name of HTML element that is source of the DOM event.</param>
         /// <param name="srcElementTypeName">The <code>type</code>attribute, if any, of the HTML element that is source of the DOM event</param>
         /// <returns></returns>
         [JSInvokable(nameof(OnKeyDown)), EditorBrowsable(EditorBrowsableState.Never)]
-        public bool OnKeyDown(ModKeys modKeys, Keys keyCode, string srcElementTagName, string srcElementTypeName)
+        public bool OnKeyDown(ModKeys modKeys, string keyName, string srcElementTagName, string srcElementTypeName)
         {
+            var keyCode = Enum.TryParse<Keys>(keyName, ignoreCase: true, out var k) ? k : (Keys)0;
             var args = new HotKeyDownEventArgs(modKeys, keyCode, srcElementTagName, srcElementTypeName, IsWasm);
             KeyDown?.Invoke(null, args);
             return args.PreventDefault;

@@ -28,11 +28,11 @@
                 case Keys.Comma: return ",";
                 case Keys.Period: return ".";
                 case Keys.Slash: return "/";
-                case Keys.BackQuart: return "`";
+                case Keys.BackQuote: return "`";
                 case Keys.BlaceLeft: return "[";
                 case Keys.BackSlash: return "]";
                 case Keys.BlaceRight: return "\\";
-                case Keys.SingleQuart: return "'";
+                case Keys.SingleQuote: return "'";
                 default:
                     return value.ToString();
             }

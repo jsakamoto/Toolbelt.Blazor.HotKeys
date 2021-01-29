@@ -25,6 +25,40 @@
         <a class="dismiss">🗙</a>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
+    <script>
+
+        const map = {
+            "Escape": "ESC",
+            "Control": "Ctrl",
+            "OS": "Meta",
+            "Minus": "Hyphen",
+            "Quote": "SingleQuote",
+        };
+
+        const regularizeKeyName = (keyName) => {
+            // "Digit1" -> "Num1"
+            const converted = /^Digit\d$/.test(keyName) ? 'Num' + keyName.charAt(5) :
+                // "VolumeUp" -> "AudioVolumeUp"
+                /^Volume.+$/.test(keyName) ? 'Audio' + keyName :
+                    // "ArrowUp" -> "Up"
+                    /^Arrow.+$/.test(keyName) ? keyName.substr(5) :
+                        // "ShiftLeft" -> "Shift"
+                        // "SACOM" ... ("S"hift|"A"lt|"C"ontrol|"O"S|"M"eta)(Left|Right)
+                        /^[SACOM].+(Left|Right)$/.test(keyName) ? keyName.replace(/(Left|Right)$/, '') :
+                            // "BracketLeft" -> "BlaceLeft"
+                            // "PageUp" -> "PgUp"
+                            keyName.replace(/^Bracket/, 'Blace').replace(/^Page/, 'Pg');
+            return map[converted] || converted;
+        }
+
+        document.addEventListener('keydown', ev => {
+            const keyName =
+                /^[a-z]$/i.test(ev.key) ? ev.key.toUpperCase() :
+                    /^\d$/.test(ev.key) ? 'Num' + ev.key :
+                        regularizeKeyName(ev.code || ev.key);
+            console.log(`keyName: ${keyName} (key: ${ev.key}, code: ${ev.code}, keyCode: 0x${ev.keyCode.toString(16)})`);
+        });
+    </script>
 </body>
 
 </html>

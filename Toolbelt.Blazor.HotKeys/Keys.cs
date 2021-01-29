@@ -1,4 +1,7 @@
-﻿namespace Toolbelt.Blazor.HotKeys
+﻿using System;
+using System.ComponentModel;
+
+namespace Toolbelt.Blazor.HotKeys
 {
     /// <summary>
     /// The identifier of the key code.
@@ -10,6 +13,8 @@
         Shift = 0x10,
         Ctrl = 0x11,
         Alt = 0x12,
+        Pause = 0x13,
+        CapsLock = 0x14,
         Enter = 0x0d,
         ESC = 0x1b,
         Space = 0x20,
@@ -21,6 +26,7 @@
         Up = 0x26,
         Right = 0x27,
         Down = 0x28,
+        Insert = 0x2D,
         Delete = 0x2E,
         Num0 = 0x30,
         Num1 = 0x31,
@@ -60,6 +66,14 @@
         X = 0x58,
         Y = 0x59,
         Z = 0x5A,
+
+        ContextMenu = 0x5D,
+
+        Multiply = 0x6A,
+        Add = 0x6B,
+        Subtract = 0x6D,
+        Divide = 0x6F,
+
         F1 = 0x70,
         F2 = 0x71,
         F3 = 0x72,
@@ -72,14 +86,35 @@
         F10 = 0x79,
         F11 = 0x7A,
         F12 = 0x7B,
-        Hyphen = 0xaD,
+
+        NumLock = 0x90,
+        ScrollLock = 0x91,
+
+        Hyphen = 0xBD,
         Comma = 0xBC,
         Period = 0xBE,
         Slash = 0xBF,
+
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("use BackQuote instead.")]
         BackQuart = 0xC0,
+
+        BackQuote = 0xC0,
+
         BlaceLeft = 0xDB,
         BackSlash = 0xDC,
         BlaceRight = 0xDD,
+
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("use SingleQuote instead.")]
         SingleQuart = 0xDE,
+
+        SingleQuote = 0xDE,
+
+        AudioVolumeMute = 0xAD,
+        AudioVolumeDown = 0xAE,
+        AudioVolumeUp = 0xAF,
+        MediaTrackNext = 0xB0,
+        MediaTrackPrevious = 0xB1,
+        MediaPlayPause = 0xB3,
+        LaunchMediaPlayer = 0xB5,
     }
 }

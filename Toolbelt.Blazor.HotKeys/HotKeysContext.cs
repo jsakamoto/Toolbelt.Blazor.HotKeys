@@ -98,7 +98,7 @@ namespace Toolbelt.Blazor.HotKeys
             {
                 return this.JSRuntime.InvokeAsync<int>(
                     "Toolbelt.Blazor.HotKeys.register",
-                    hotKeyEntry.ObjectReference, hotKeyEntry.ModKeys, hotKeyEntry.Key, hotKeyEntry.AllowIn).AsTask();
+                    hotKeyEntry.ObjectReference, hotKeyEntry.ModKeys, hotKeyEntry.Key.ToString(), hotKeyEntry.AllowIn).AsTask();
             })
             .Unwrap()
             .ContinueWith(t =>
