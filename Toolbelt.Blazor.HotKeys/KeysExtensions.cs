@@ -10,32 +10,32 @@
         /// </summary>
         public static string ToKeyString(this Keys value)
         {
-            switch (value)
+            return value switch
             {
-                case Keys.Num0: return "0";
-                case Keys.Num1: return "1";
-                case Keys.Num2: return "2";
-                case Keys.Num3: return "3";
-                case Keys.Num4: return "4";
-                case Keys.Num5: return "5";
-                case Keys.Num6: return "6";
-                case Keys.Num7: return "7";
-                case Keys.Num8: return "8";
-                case Keys.Num9: return "9";
-                case Keys.SemiColon: return ";";
-                case Keys.Equal: return "=";
-                case Keys.Hyphen: return "-";
-                case Keys.Comma: return ",";
-                case Keys.Period: return ".";
-                case Keys.Slash: return "/";
-                case Keys.BackQuote: return "`";
-                case Keys.BlaceLeft: return "[";
-                case Keys.BackSlash: return "]";
-                case Keys.BlaceRight: return "\\";
-                case Keys.SingleQuote: return "'";
-                default:
-                    return value.ToString();
-            }
+                0 => null,
+                Keys.Num0 => "0",
+                Keys.Num1 => "1",
+                Keys.Num2 => "2",
+                Keys.Num3 => "3",
+                Keys.Num4 => "4",
+                Keys.Num5 => "5",
+                Keys.Num6 => "6",
+                Keys.Num7 => "7",
+                Keys.Num8 => "8",
+                Keys.Num9 => "9",
+                Keys.SemiColon => ";",
+                Keys.Equal => "=",
+                Keys.Hyphen => "-",
+                Keys.Comma => ",",
+                Keys.Period => ".",
+                Keys.Slash => "/",
+                Keys.BackQuote => "`",
+                Keys.BlaceLeft => "[",
+                Keys.BackSlash => "]",
+                Keys.BlaceRight => "\\",
+                Keys.SingleQuote => "'",
+                _ => value.ToString(),
+            };
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Toolbelt.Blazor.HotKeys
 
         private readonly IJSRuntime JSRuntime;
 
-        private readonly SemaphoreSlim Syncer = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim Syncer = new(1, 1);
 
         private readonly bool IsWasm = RuntimeInformation.OSDescription == "web" || RuntimeInformation.OSDescription == "Browser";
 

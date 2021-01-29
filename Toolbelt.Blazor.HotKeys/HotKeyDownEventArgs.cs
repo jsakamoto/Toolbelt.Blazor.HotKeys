@@ -25,7 +25,7 @@ namespace Toolbelt.Blazor.HotKeys
         public string NativeKey { get; }
 
         /// <summary>
-        /// Get the value of the "code" property in the HTML Keyboard event object, taht represents a physical key on the keyboard.<br/>
+        /// Get the value of the "code" property in the HTML Keyboard event object, that represents a physical key on the keyboard.<br/>
         /// (https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code/code_values)
         /// </summary>
         public string NativeCode { get; }
