@@ -43,7 +43,8 @@ namespace Toolbelt.Blazor.HotKeys
             try
             {
                 if (_Attached) return;
-                const string scriptPath = "_content/Toolbelt.Blazor.HotKeys/script.min.js";
+                var version = this.GetType().Assembly.GetName().Version;
+                var scriptPath = $"_content/Toolbelt.Blazor.HotKeys/script.min.js?v={version}";
                 await JSRuntime.InvokeVoidAsync("eval", "new Promise(r=>((d,t,s)=>(h=>h.querySelector(t+`[src=\"${{s}}\"]`)?r():(e=>(e.src=s,e.onload=r,h.appendChild(e)))(d.createElement(t)))(d.head))(document,'script','" + scriptPath + "'))");
                 await JSRuntime.InvokeVoidAsync("Toolbelt.Blazor.HotKeys.attach", DotNetObjectReference.Create(this), IsWasm);
                 _Attached = true;
