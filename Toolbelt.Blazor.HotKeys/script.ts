@@ -100,6 +100,7 @@
 
     export function attach(hotKeysWrpper: any, isWasm: boolean): void {
         document.addEventListener('keydown', ev => {
+            if (typeof (ev["altKey"]) === 'undefined') return;
             const modKeys =
                 (ev.shiftKey ? ModKeys.Shift : 0) +
                 (ev.ctrlKey ? ModKeys.Ctrl : 0) +

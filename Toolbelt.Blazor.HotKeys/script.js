@@ -74,6 +74,8 @@ var Toolbelt;
             }
             function attach(hotKeysWrpper, isWasm) {
                 document.addEventListener('keydown', function (ev) {
+                    if (typeof (ev["altKey"]) === 'undefined')
+                        return;
                     var modKeys = (ev.shiftKey ? 1 : 0) +
                         (ev.ctrlKey ? 2 : 0) +
                         (ev.altKey ? 4 : 0) +
