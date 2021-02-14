@@ -1,3 +1,6 @@
+v.10.0.1
+- Fix: A browser's autofill feature causes the unhandled exception.
+
 v.10.0.0
 - Use "key" and "code" properties of the keyboard event object instead of the "keyCode" that was deprecated.
   [NOTICE] Please be careful that this change might be a breaking change for your applications.
