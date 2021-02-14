@@ -1,0 +1,411 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbelt.Blazor.HotKeys</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbelt.Blazor.HotKeys.AllowIn">
+            <summary>
+            The flags of HTML element that will be allowed hotkey works.
+            </summary>
+        </member>
+        <member name="F:Toolbelt.Blazor.HotKeys.AllowIn.None">
+            <summary>
+            Default. The hot key feature will not be work when the INPUT or TEXTAREA element has focus.
+            </summary>
+        </member>
+        <member name="F:Toolbelt.Blazor.HotKeys.AllowIn.Input">
+            <summary>
+            The hot key feature also works when the INPUT element has focus.
+            </summary>
+        </member>
+        <member name="F:Toolbelt.Blazor.HotKeys.AllowIn.TextArea">
+            <summary>
+            The hot key feature also works when the TEXTAREA element has focus.
+            </summary>
+        </member>
+        <member name="F:Toolbelt.Blazor.HotKeys.AllowIn.NonTextInput">
+            <summary>
+            The hot key feature also works when a non-text INPUT element, such as a checkbox or toggle, has focus.
+            </summary>
+        </member>
+        <member name="T:Toolbelt.Blazor.HotKeys.HotKeyDownEventArgs">
+            <summary>
+            Provides data for the KeyDown eventsof HotKeys service.
+            </summary>
+        </member>
+        <member name="P:Toolbelt.Blazor.HotKeys.HotKeyDownEventArgs.ModKeys">
+            <summary>
+            Get the combination of modifier keys flags.
+            </summary>
+        </member>
+        <member name="P:Toolbelt.Blazor.HotKeys.HotKeyDownEventArgs.Key">
+            <summary>
+            Get the identifier of the key that is pressed.
+            </summary>
+        </member>
+        <member name="P:Toolbelt.Blazor.HotKeys.HotKeyDownEventArgs.NativeKey">
+            <summary>
+            Get the value of the "key" property in the HTML Keyboard event object, that taking into consideration the state of modifier keys such as Shift as well as the keyboard locale and layout.<br/>
+            (https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values)
+            </summary>
+        </member>
+        <member name="P:Toolbelt.Blazor.HotKeys.HotKeyDownEventArgs.NativeCode">
+            <summary>
+            Get the value of the "code" property in the HTML Keyboard event object, that represents a physical key on the keyboard.<br/>
+            (https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code/code_values)
+            </summary>
+        </member>
+        <member name="P:Toolbelt.Blazor.HotKeys.HotKeyDownEventArgs.SrcElementTagName">
+            <summary>
+            Get the tag name of HTML element that is source of the DOM event.
+            </summary>
+        </member>
+        <member name="P:Toolbelt.Blazor.HotKeys.HotKeyDownEventArgs.SrcElementTypeAttribute">
+            <summary>
+            Get the type attribute, if any, of the HTML element that is source of the DOM event.
+            </summary>
+        </member>
+        <member name="P:Toolbelt.Blazor.HotKeys.HotKeyDownEventArgs.IsWasm">
+            <summary>
+            Get the runtime environment is on a WebAssembly (Web browser), or not.
+            </summary>
+        </member>
+        <member name="P:Toolbelt.Blazor.HotKeys.HotKeyDownEventArgs.PreventDefault">
+            <summary>
+            Get or set the flag to determine prevent default behavior or not.<br/>
+            [IMPORTANT NOTICE] When set this property to true on a Blazor Server App (not a WebAssembly app), <see cref="T:System.InvalidOperationException"/> will be thrown. <br/>
+            ("PreventDefault" behavior is not supported on Blazor Server App.)
+            </summary>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeyDownEventArgs.#ctor(Toolbelt.Blazor.HotKeys.ModKeys,Toolbelt.Blazor.HotKeys.Keys,System.String,System.String)">
+            <summary>
+            Initialize a new instance of the HotKeyDownEventArgs class.
+            </summary>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeyDownEventArgs.#ctor(Toolbelt.Blazor.HotKeys.ModKeys,Toolbelt.Blazor.HotKeys.Keys,System.String,System.String,System.Boolean)">
+            <summary>
+            Initialize a new instance of the HotKeyDownEventArgs class.
+            </summary>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeyDownEventArgs.#ctor(Toolbelt.Blazor.HotKeys.ModKeys,Toolbelt.Blazor.HotKeys.Keys,System.String,System.String,System.Boolean,System.String,System.String)">
+            <summary>
+            Initialize a new instance of the HotKeyDownEventArgs class.
+            </summary>
+        </member>
+        <member name="T:Toolbelt.Blazor.HotKeys.HotKeyEntry">
+            <summary>
+            Association of key combination and callback action.
+            </summary>
+        </member>
+        <member name="P:Toolbelt.Blazor.HotKeys.HotKeyEntry.ModKeys">
+            <summary>
+            Get the combination of modifier keys flags.
+            </summary>
+        </member>
+        <member name="P:Toolbelt.Blazor.HotKeys.HotKeyEntry.Key">
+            <summary>
+            Get the identifier of hotkey.
+            </summary>
+        </member>
+        <member name="P:Toolbelt.Blazor.HotKeys.HotKeyEntry.KeyName">
+            <summary>
+            Get the name if the identifier of hotkey.
+            <para>The "key name" is a bit different from the "key" and "code" properties of the DOM event object.<br/> The "key name" comes from "key" and "code", but it is tried to converting to one of the Keys enum values names.<br/>if the keyboard event is not covered by Keys enum values, the "key name" will be the value of "code" or "key".</para>
+            </summary>
+        </member>
+        <member name="P:Toolbelt.Blazor.HotKeys.HotKeyEntry.Description">
+            <summary>
+            Get the description of the meaning of this hot key entry.
+            </summary>
+        </member>
+        <member name="P:Toolbelt.Blazor.HotKeys.HotKeyEntry.AllowIn">
+            <summary>
+            Get the combination of HTML element flags that will be allowed hotkey works.
+            </summary>
+        </member>
+        <member name="P:Toolbelt.Blazor.HotKeys.HotKeyEntry.Action">
+            <summary>
+            Get the callback action that will be invoked when user enter modKeys + key combination on the browser.
+            </summary>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeyEntry.#ctor(Toolbelt.Blazor.HotKeys.ModKeys,Toolbelt.Blazor.HotKeys.Keys,Toolbelt.Blazor.HotKeys.AllowIn,System.String,System.Func{Toolbelt.Blazor.HotKeys.HotKeyEntry,System.Threading.Tasks.Task})">
+            <summary>
+            Initialize a new instance of the HotKeyEntry class.
+            </summary>
+            <param name="modKeys">The combination of modifier keys flags.</param>
+            <param name="key">The identifier of hotkey.</param>
+            <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
+            <param name="description">The description of the meaning of this hot key entry.</param>
+            <param name="allowIn">The combination of HTML element flags that will be allowed hotkey works.</param>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeyEntry.#ctor(Toolbelt.Blazor.HotKeys.ModKeys,Toolbelt.Blazor.HotKeys.Keys,Toolbelt.Blazor.HotKeys.AllowIn,System.String,System.Func{System.Threading.Tasks.Task})">
+            <summary>
+            Initialize a new instance of the HotKeyEntry class.
+            </summary>
+            <param name="modKeys">The combination of modifier keys flags.</param>
+            <param name="key">The identifier of hotkey.</param>
+            <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
+            <param name="description">The description of the meaning of this hot key entry.</param>
+            <param name="allowIn">The combination of HTML element flags that will be allowed hotkey works.</param>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeyEntry.#ctor(Toolbelt.Blazor.HotKeys.ModKeys,Toolbelt.Blazor.HotKeys.Keys,Toolbelt.Blazor.HotKeys.AllowIn,System.String,System.Action{Toolbelt.Blazor.HotKeys.HotKeyEntry})">
+            <summary>
+            Initialize a new instance of the HotKeyEntry class.
+            </summary>
+            <param name="modKeys">The combination of modifier keys flags.</param>
+            <param name="key">The identifier of hotkey.</param>
+            <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
+            <param name="description">The description of the meaning of this hot key entry.</param>
+            <param name="allowIn">The combination of HTML element flags that will be allowed hotkey works.</param>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeyEntry.#ctor(Toolbelt.Blazor.HotKeys.ModKeys,Toolbelt.Blazor.HotKeys.Keys,Toolbelt.Blazor.HotKeys.AllowIn,System.String,System.Action)">
+            <summary>
+            Initialize a new instance of the HotKeyEntry class.
+            </summary>
+            <param name="modKeys">The combination of modifier keys flags.</param>
+            <param name="key">The identifier of hotkey.</param>
+            <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
+            <param name="description">The description of the meaning of this hot key entry.</param>
+            <param name="allowIn">The combination of HTML element flags that will be allowed hotkey works.</param>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeyEntry.#ctor(Toolbelt.Blazor.HotKeys.ModKeys,System.String,Toolbelt.Blazor.HotKeys.AllowIn,System.String,System.Func{Toolbelt.Blazor.HotKeys.HotKeyEntry,System.Threading.Tasks.Task})">
+            <summary>
+            Initialize a new instance of the HotKeyEntry class.
+            </summary>
+            <param name="modKeys">The combination of modifier keys flags.</param>
+            <param name="keyName">The name of the identifier of hotkey.<para>The "key name" is a bit different from the "key" and "code" properties of the DOM event object.<br/> The "key name" comes from "key" and "code", but it is tried to converting to one of the Keys enum values names.<br/>if the keyboard event is not covered by Keys enum values, the "key name" will be the value of "code" or "key".</para></param>
+            <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
+            <param name="description">The description of the meaning of this hot key entry.</param>
+            <param name="allowIn">The combination of HTML element flags that will be allowed hotkey works.</param>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeyEntry.#ctor(Toolbelt.Blazor.HotKeys.ModKeys,System.String,Toolbelt.Blazor.HotKeys.AllowIn,System.String,System.Func{System.Threading.Tasks.Task})">
+            <summary>
+            Initialize a new instance of the HotKeyEntry class.
+            </summary>
+            <param name="modKeys">The combination of modifier keys flags.</param>
+            <param name="keyName">The name of the identifier of hotkey.<para>The "key name" is a bit different from the "key" and "code" properties of the DOM event object.<br/> The "key name" comes from "key" and "code", but it is tried to converting to one of the Keys enum values names.<br/>if the keyboard event is not covered by Keys enum values, the "key name" will be the value of "code" or "key".</para></param>
+            <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
+            <param name="description">The description of the meaning of this hot key entry.</param>
+            <param name="allowIn">The combination of HTML element flags that will be allowed hotkey works.</param>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeyEntry.#ctor(Toolbelt.Blazor.HotKeys.ModKeys,System.String,Toolbelt.Blazor.HotKeys.AllowIn,System.String,System.Action{Toolbelt.Blazor.HotKeys.HotKeyEntry})">
+            <summary>
+            Initialize a new instance of the HotKeyEntry class.
+            </summary>
+            <param name="modKeys">The combination of modifier keys flags.</param>
+            <param name="keyName">The name of the identifier of hotkey.<para>The "key name" is a bit different from the "key" and "code" properties of the DOM event object.<br/> The "key name" comes from "key" and "code", but it is tried to converting to one of the Keys enum values names.<br/>if the keyboard event is not covered by Keys enum values, the "key name" will be the value of "code" or "key".</para></param>
+            <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
+            <param name="description">The description of the meaning of this hot key entry.</param>
+            <param name="allowIn">The combination of HTML element flags that will be allowed hotkey works.</param>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeyEntry.#ctor(Toolbelt.Blazor.HotKeys.ModKeys,System.String,Toolbelt.Blazor.HotKeys.AllowIn,System.String,System.Action)">
+            <summary>
+            Initialize a new instance of the HotKeyEntry class.
+            </summary>
+            <param name="modKeys">The combination of modifier keys flags.</param>
+            <param name="keyName">The name of the identifier of hotkey.<para>The "key name" is a bit different from the "key" and "code" properties of the DOM event object.<br/> The "key name" comes from "key" and "code", but it is tried to converting to one of the Keys enum values names.<br/>if the keyboard event is not covered by Keys enum values, the "key name" will be the value of "code" or "key".</para></param>
+            <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
+            <param name="description">The description of the meaning of this hot key entry.</param>
+            <param name="allowIn">The combination of HTML element flags that will be allowed hotkey works.</param>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeyEntry.ToString">
+            <summary>
+            Returns a String that combined key combination and description of this entry, like "Ctrl+A: Select All."
+            </summary>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeyEntry.ToString(System.String)">
+            <summary>
+            Returns a String formatted with specified format string.
+            </summary>
+            <param name="format">{0} will be replaced with key combination text, and {1} will be replaced with description of this hotkey entry object.</param>
+        </member>
+        <member name="T:Toolbelt.Blazor.HotKeys.HotKeys">
+            <summary>
+            A service that provides Hotkey feature.
+            </summary>
+        </member>
+        <member name="E:Toolbelt.Blazor.HotKeys.HotKeys.KeyDown">
+            <summary>
+            Occurs when the user enter any keys on the browser.
+            </summary>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeys.#ctor(Microsoft.JSInterop.IJSRuntime)">
+            <summary>
+            Initialize a new instance of the HotKeys class.
+            </summary>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeys.Attach">
+            <summary>
+            Attach this HotKeys service instance to JavaScript DOM event handler.
+            </summary>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeys.CreateContext">
+            <summary>
+            Create hotkey entries context, and activate it.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeys.OnKeyDown(Toolbelt.Blazor.HotKeys.ModKeys,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            The method that will be invoked from JavaScript keydown event handler.
+            </summary>
+            <param name="modKeys">The combination of modifier keys flags.</param>
+            <param name="keyName">The identifier of hotkey.</param>
+            <param name="srcElementTagName">The tag name of HTML element that is source of the DOM event.</param>
+            <param name="srcElementTypeName">The <code>type</code>attribute, if any, of the HTML element that is source of the DOM event</param>
+            <param name="nativeKey">The value of the "key" property in the DOM event object</param>
+            <param name="nativeCode">The value of the "code" property in the DOM event object</param>
+            <returns></returns>
+        </member>
+        <member name="T:Toolbelt.Blazor.HotKeys.HotKeysContext">
+            <summary>
+            Current active hotkeys set.
+            </summary>
+        </member>
+        <member name="P:Toolbelt.Blazor.HotKeys.HotKeysContext.Keys">
+            <summary>
+            The collection of Hotkey entries.
+            </summary>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeysContext.#ctor(Microsoft.JSInterop.IJSRuntime,System.Threading.Tasks.Task)">
+            <summary>
+            Initialize a new instance of the HotKeysContext class.
+            </summary>
+            <param name="jSRuntime"></param>
+            <param name="attachTask"></param>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeysContext.Add(Toolbelt.Blazor.HotKeys.ModKeys,Toolbelt.Blazor.HotKeys.Keys,System.Func{Toolbelt.Blazor.HotKeys.HotKeyEntry,System.Threading.Tasks.Task},System.String,Toolbelt.Blazor.HotKeys.AllowIn)">
+            <summary>
+            Add a new hotkey entry to this context.<br/>
+            if the key that you want to hook is not covered by the Keys enum values, use the other overload version that accepts key name as a string.
+            </summary>
+            <param name="modKeys">The combination of modifier keys flags.</param>
+            <param name="key">The identifier of hotkey.</param>
+            <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
+            <param name="description">The description of the meaning of this hot key entry.</param>
+            <param name="allowIn">The combination of HTML element flags that will be allowed hotkey works.</param>
+            <returns>This context.</returns>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeysContext.Add(Toolbelt.Blazor.HotKeys.ModKeys,Toolbelt.Blazor.HotKeys.Keys,System.Func{System.Threading.Tasks.Task},System.String,Toolbelt.Blazor.HotKeys.AllowIn)">
+            <summary>
+            Add a new hotkey entry to this context.<br/>
+            if the key that you want to hook is not covered by the Keys enum values, use the other overload version that accepts key name as a string.
+            </summary>
+            <param name="modKeys">The combination of modifier keys flags.</param>
+            <param name="key">The identifier of hotkey.</param>
+            <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
+            <param name="description">The description of the meaning of this hot key entry.</param>
+            <param name="allowIn">The combination of HTML element flags that will be allowed hotkey works.</param>
+            <returns>This context.</returns>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeysContext.Add(Toolbelt.Blazor.HotKeys.ModKeys,Toolbelt.Blazor.HotKeys.Keys,System.Action{Toolbelt.Blazor.HotKeys.HotKeyEntry},System.String,Toolbelt.Blazor.HotKeys.AllowIn)">
+            <summary>
+            Add a new hotkey entry to this context.<br/>
+            if the key that you want to hook is not covered by the Keys enum values, use the other overload version that accepts key name as a string.
+            </summary>
+            <param name="modKeys">The combination of modifier keys flags.</param>
+            <param name="key">The identifier of hotkey.</param>
+            <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
+            <param name="description">The description of the meaning of this hot key entry.</param>
+            <param name="allowIn">The combination of HTML element flags that will be allowed hotkey works.</param>
+            <returns>This context.</returns>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeysContext.Add(Toolbelt.Blazor.HotKeys.ModKeys,Toolbelt.Blazor.HotKeys.Keys,System.Action,System.String,Toolbelt.Blazor.HotKeys.AllowIn)">
+            <summary>
+            Add a new hotkey entry to this context.<br/>
+            if the key that you want to hook is not covered by the Keys enum values, use the other overload version that accepts key name as a string.
+            </summary>
+            <param name="modKeys">The combination of modifier keys flags.</param>
+            <param name="key">The identifier of hotkey.</param>
+            <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
+            <param name="description">The description of the meaning of this hot key entry.</param>
+            <param name="allowIn">The combination of HTML element flags that will be allowed hotkey works.</param>
+            <returns>This context.</returns>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeysContext.Add(Toolbelt.Blazor.HotKeys.ModKeys,System.String,System.Func{Toolbelt.Blazor.HotKeys.HotKeyEntry,System.Threading.Tasks.Task},System.String,Toolbelt.Blazor.HotKeys.AllowIn)">
+            <summary>
+            Add a new hotkey entry to this context.<br/>
+            if the key that you want to hook is not covered by the Keys enum values, use this overload version that accepts key name as a string.
+            </summary>
+            <param name="modKeys">The combination of modifier keys flags.</param>
+            <param name="keyName">The name of the identifier of hotkey.<para>The "key name" is a bit different from the "key" and "code" properties of the DOM event object.<br/> The "key name" comes from "key" and "code", but it is tried to converting to one of the Keys enum values names.<br/>if the keyboard event is not covered by Keys enum values, the "key name" will be the value of "code" or "key".</para></param>
+            <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
+            <param name="description">The description of the meaning of this hot key entry.</param>
+            <param name="allowIn">The combination of HTML element flags that will be allowed hotkey works.</param>
+            <returns>This context.</returns>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeysContext.Add(Toolbelt.Blazor.HotKeys.ModKeys,System.String,System.Func{System.Threading.Tasks.Task},System.String,Toolbelt.Blazor.HotKeys.AllowIn)">
+            <summary>
+            Add a new hotkey entry to this context.<br/>
+            if the key that you want to hook is not covered by the Keys enum values, use this overload version that accepts key name as a string.
+            </summary>
+            <param name="modKeys">The combination of modifier keys flags.</param>
+            <param name="keyName">The name of the identifier of hotkey.<para>The "key name" is a bit different from the "key" and "code" properties of the DOM event object.<br/> The "key name" comes from "key" and "code", but it is tried to converting to one of the Keys enum values names.<br/>if the keyboard event is not covered by Keys enum values, the "key name" will be the value of "code" or "key".</para></param>
+            <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
+            <param name="description">The description of the meaning of this hot key entry.</param>
+            <param name="allowIn">The combination of HTML element flags that will be allowed hotkey works.</param>
+            <returns>This context.</returns>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeysContext.Add(Toolbelt.Blazor.HotKeys.ModKeys,System.String,System.Action{Toolbelt.Blazor.HotKeys.HotKeyEntry},System.String,Toolbelt.Blazor.HotKeys.AllowIn)">
+            <summary>
+            Add a new hotkey entry to this context.<br/>
+            if the key that you want to hook is not covered by the Keys enum values, use this overload version that accepts key name as a string.
+            </summary>
+            <param name="modKeys">The combination of modifier keys flags.</param>
+            <param name="keyName">The name of the identifier of hotkey.<para>The "key name" is a bit different from the "key" and "code" properties of the DOM event object.<br/> The "key name" comes from "key" and "code", but it is tried to converting to one of the Keys enum values names.<br/>if the keyboard event is not covered by Keys enum values, the "key name" will be the value of "code" or "key".</para></param>
+            <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
+            <param name="description">The description of the meaning of this hot key entry.</param>
+            <param name="allowIn">The combination of HTML element flags that will be allowed hotkey works.</param>
+            <returns>This context.</returns>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeysContext.Add(Toolbelt.Blazor.HotKeys.ModKeys,System.String,System.Action,System.String,Toolbelt.Blazor.HotKeys.AllowIn)">
+            <summary>
+            Add a new hotkey entry to this context.<br/>
+            if the key that you want to hook is not covered by the Keys enum values, use this overload version that accepts key name as a string.
+            </summary>
+            <param name="modKeys">The combination of modifier keys flags.</param>
+            <param name="keyName">The name of the identifier of hotkey.<para>The "key name" is a bit different from the "key" and "code" properties of the DOM event object.<br/> The "key name" comes from "key" and "code", but it is tried to converting to one of the Keys enum values names.<br/>if the keyboard event is not covered by Keys enum values, the "key name" will be the value of "code" or "key".</para></param>
+            <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
+            <param name="description">The description of the meaning of this hot key entry.</param>
+            <param name="allowIn">The combination of HTML element flags that will be allowed hotkey works.</param>
+            <returns>This context.</returns>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.HotKeysContext.Dispose">
+            <summary>
+            Deactivate the hot key entry contained in this context.
+            </summary>
+        </member>
+        <member name="T:Toolbelt.Blazor.HotKeys.Keys">
+            <summary>
+            The identifier of the key code.
+            </summary>
+        </member>
+        <member name="T:Toolbelt.Blazor.HotKeys.KeysExtensions">
+            <summary>
+            The extension methods for "Keys" enum type.
+            </summary>
+        </member>
+        <member name="M:Toolbelt.Blazor.HotKeys.KeysExtensions.ToKeyString(Toolbelt.Blazor.HotKeys.Keys)">
+            <summary>
+            Returns a String that represent readable key name of this Keys enum value, like "Top", "Left", "Enter", "A", "B", "C", etc.
+            </summary>
+        </member>
+        <member name="T:Toolbelt.Blazor.HotKeys.ModKeys">
+            <summary>
+            The flags of modifier keys.
+            </summary>
+        </member>
+        <member name="T:Toolbelt.Blazor.Extensions.DependencyInjection.HotKeysExtensions">
+            <summary>
+            Extension methods for adding Hoteys service.
+            </summary>
+        </member>
+        <member name="M:Toolbelt.Blazor.Extensions.DependencyInjection.HotKeysExtensions.AddHotKeys(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+             Adds a HotKeys service to the specified Microsoft.Extensions.DependencyInjection.IServiceCollection.
+            </summary>
+            <param name="services">The Microsoft.Extensions.DependencyInjection.IServiceCollection to add the service to.</param>
+        </member>
+    </members>
+</doc>
