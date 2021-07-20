@@ -1,4 +1,4 @@
-﻿namespace Toolbelt.Blazor.HotKeys {
+﻿export namespace Toolbelt.Blazor.HotKeys {
 
     const enum AllowIn {
         None = 0b0000,

@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
 
+#if ENABLE_JSMODULE
+using IJSInterface = Microsoft.JSInterop.IJSObjectReference;
+#else
+using IJSInterface = Microsoft.JSInterop.IJSRuntime;
+#endif
+
 namespace Toolbelt.Blazor.HotKeys
 {
     /// <summary>
@@ -15,19 +21,14 @@ namespace Toolbelt.Blazor.HotKeys
         /// </summary>
         public List<HotKeyEntry> Keys { get; } = new List<HotKeyEntry>();
 
-        private readonly IJSRuntime JSRuntime;
-
-        private readonly Task AttachTask;
+        private readonly Task<IJSInterface> _AttachTask;
 
         /// <summary>
         /// Initialize a new instance of the HotKeysContext class.
         /// </summary>
-        /// <param name="jSRuntime"></param>
-        /// <param name="attachTask"></param>
-        internal HotKeysContext(IJSRuntime jSRuntime, Task attachTask)
+        internal HotKeysContext(Task<IJSInterface> attachTask)
         {
-            this.JSRuntime = jSRuntime;
-            this.AttachTask = attachTask;
+            this._AttachTask = attachTask;
         }
 
         /// <summary>
@@ -42,7 +43,7 @@ namespace Toolbelt.Blazor.HotKeys
         /// <returns>This context.</returns>
         public HotKeysContext Add(ModKeys modKeys, Keys key, Func<HotKeyEntry, Task> action, string description = "", AllowIn allowIn = AllowIn.None)
         {
-            this.Keys.Add(Register(new HotKeyEntry(modKeys, key, allowIn, description, action)));
+            this.Keys.Add(this.Register(new HotKeyEntry(modKeys, key, allowIn, description, action)));
             return this;
         }
 
@@ -58,7 +59,7 @@ namespace Toolbelt.Blazor.HotKeys
         /// <returns>This context.</returns>
         public HotKeysContext Add(ModKeys modKeys, Keys key, Func<Task> action, string description = "", AllowIn allowIn = AllowIn.None)
         {
-            this.Keys.Add(Register(new HotKeyEntry(modKeys, key, allowIn, description, action)));
+            this.Keys.Add(this.Register(new HotKeyEntry(modKeys, key, allowIn, description, action)));
             return this;
         }
 
@@ -74,7 +75,7 @@ namespace Toolbelt.Blazor.HotKeys
         /// <returns>This context.</returns>
         public HotKeysContext Add(ModKeys modKeys, Keys key, Action<HotKeyEntry> action, string description = "", AllowIn allowIn = AllowIn.None)
         {
-            this.Keys.Add(Register(new HotKeyEntry(modKeys, key, allowIn, description, action)));
+            this.Keys.Add(this.Register(new HotKeyEntry(modKeys, key, allowIn, description, action)));
             return this;
         }
 
@@ -90,7 +91,7 @@ namespace Toolbelt.Blazor.HotKeys
         /// <returns>This context.</returns>
         public HotKeysContext Add(ModKeys modKeys, Keys key, Action action, string description = "", AllowIn allowIn = AllowIn.None)
         {
-            this.Keys.Add(Register(new HotKeyEntry(modKeys, key, allowIn, description, action)));
+            this.Keys.Add(this.Register(new HotKeyEntry(modKeys, key, allowIn, description, action)));
             return this;
         }
 
@@ -106,7 +107,7 @@ namespace Toolbelt.Blazor.HotKeys
         /// <returns>This context.</returns>
         public HotKeysContext Add(ModKeys modKeys, string keyName, Func<HotKeyEntry, Task> action, string description = "", AllowIn allowIn = AllowIn.None)
         {
-            this.Keys.Add(Register(new HotKeyEntry(modKeys, keyName, allowIn, description, action)));
+            this.Keys.Add(this.Register(new HotKeyEntry(modKeys, keyName, allowIn, description, action)));
             return this;
         }
 
@@ -122,7 +123,7 @@ namespace Toolbelt.Blazor.HotKeys
         /// <returns>This context.</returns>
         public HotKeysContext Add(ModKeys modKeys, string keyName, Func<Task> action, string description = "", AllowIn allowIn = AllowIn.None)
         {
-            this.Keys.Add(Register(new HotKeyEntry(modKeys, keyName, allowIn, description, action)));
+            this.Keys.Add(this.Register(new HotKeyEntry(modKeys, keyName, allowIn, description, action)));
             return this;
         }
 
@@ -138,7 +139,7 @@ namespace Toolbelt.Blazor.HotKeys
         /// <returns>This context.</returns>
         public HotKeysContext Add(ModKeys modKeys, string keyName, Action<HotKeyEntry> action, string description = "", AllowIn allowIn = AllowIn.None)
         {
-            this.Keys.Add(Register(new HotKeyEntry(modKeys, keyName, allowIn, description, action)));
+            this.Keys.Add(this.Register(new HotKeyEntry(modKeys, keyName, allowIn, description, action)));
             return this;
         }
 
@@ -154,18 +155,27 @@ namespace Toolbelt.Blazor.HotKeys
         /// <returns>This context.</returns>
         public HotKeysContext Add(ModKeys modKeys, string keyName, Action action, string description = "", AllowIn allowIn = AllowIn.None)
         {
-            this.Keys.Add(Register(new HotKeyEntry(modKeys, keyName, allowIn, description, action)));
+            this.Keys.Add(this.Register(new HotKeyEntry(modKeys, keyName, allowIn, description, action)));
             return this;
         }
 
         private HotKeyEntry Register(HotKeyEntry hotKeyEntry)
         {
             hotKeyEntry.ObjectReference = DotNetObjectReference.Create(hotKeyEntry);
-            this.AttachTask.ContinueWith(t =>
+            this._AttachTask.ContinueWith(t =>
             {
-                return this.JSRuntime.InvokeAsync<int>(
-                    "Toolbelt.Blazor.HotKeys.register",
-                    hotKeyEntry.ObjectReference, hotKeyEntry.ModKeys, hotKeyEntry.KeyName, hotKeyEntry.AllowIn).AsTask();
+                if (t.IsCompleted && !t.IsFaulted)
+                {
+                    return t.Result.InvokeAsync<int>(
+                        "Toolbelt.Blazor.HotKeys.register",
+                        hotKeyEntry.ObjectReference, hotKeyEntry.ModKeys, hotKeyEntry.KeyName, hotKeyEntry.AllowIn).AsTask();
+                }
+                else
+                {
+                    var tcs = new TaskCompletionSource<int>();
+                    tcs.TrySetException(t.Exception.InnerExceptions);
+                    return tcs.Task;
+                }
             })
             .Unwrap()
             .ContinueWith(t =>
@@ -179,14 +189,25 @@ namespace Toolbelt.Blazor.HotKeys
         {
             if (hotKeyEntry.Id == -1) return;
 
-            this.JSRuntime.InvokeVoidAsync("Toolbelt.Blazor.HotKeys.unregister", hotKeyEntry.Id)
-                .AsTask()
-                .ContinueWith(t =>
+            this._AttachTask.ContinueWith(t =>
+            {
+                if (t.IsCompleted && !t.IsFaulted)
                 {
-                    hotKeyEntry.Id = -1;
-                    hotKeyEntry.ObjectReference?.Dispose();
-                    hotKeyEntry.ObjectReference = null;
-                });
+                    return t.Result.InvokeVoidAsync("Toolbelt.Blazor.HotKeys.unregister", hotKeyEntry.Id).AsTask();
+                }
+                else
+                {
+                    var tcs = new TaskCompletionSource<int>();
+                    tcs.TrySetException(t.Exception.InnerExceptions);
+                    return tcs.Task as Task;
+                }
+            })
+            .ContinueWith(t =>
+            {
+                hotKeyEntry.Id = -1;
+                hotKeyEntry.ObjectReference?.Dispose();
+                hotKeyEntry.ObjectReference = null;
+            });
         }
 
         /// <summary>
