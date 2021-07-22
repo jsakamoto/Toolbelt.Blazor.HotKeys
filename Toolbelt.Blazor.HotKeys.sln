@@ -28,6 +28,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleSite.Client.Net5", "S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleSite.Client.Net31", "SampleSites\Client\SampleSite.Client.Net31.csproj", "{D22241B1-48B7-47A4-815F-94F497A15220}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toolbelt.Blazor.HotKeys.E2ETest", "Toolbelt.Blazor.HotKeys.E2ETest\Toolbelt.Blazor.HotKeys.E2ETest.csproj", "{3A353648-56C8-419E-BBEA-856F9034797B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,10 @@ Global
 		{D22241B1-48B7-47A4-815F-94F497A15220}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D22241B1-48B7-47A4-815F-94F497A15220}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D22241B1-48B7-47A4-815F-94F497A15220}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A353648-56C8-419E-BBEA-856F9034797B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A353648-56C8-419E-BBEA-856F9034797B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A353648-56C8-419E-BBEA-856F9034797B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A353648-56C8-419E-BBEA-856F9034797B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--<PackageReference Include="Toolbelt.Blazor.HotKeys" Version="10.0.1" />-->
-    <ProjectReference Include="..\..\Toolbelt.Blazor.HotKeys\Toolbelt.Blazor.HotKeys.csproj" />
+    <PackageReference Include="Toolbelt.Blazor.HotKeys" Version="11.0.0-preview.1" />
+    <!--<ProjectReference Include="..\..\Toolbelt.Blazor.HotKeys\Toolbelt.Blazor.HotKeys.csproj" />-->
   </ItemGroup>
 
 </Project>
