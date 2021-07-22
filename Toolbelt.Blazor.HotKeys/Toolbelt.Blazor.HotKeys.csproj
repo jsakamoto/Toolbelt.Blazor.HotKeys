@@ -20,6 +20,7 @@
     <PackageTags>blazor,hotkey</PackageTags>
     <PackageReleaseNotes>(Please write the package release notes in "RELEASE NOTES.txt".)</PackageReleaseNotes>
     <PackageIcon>nupkg-icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageOutputPath>..\_dist\</PackageOutputPath>
   </PropertyGroup>
   <PropertyGroup>
@@ -67,6 +68,7 @@
   <ItemGroup>
     <Content Update="**\*.json" Pack="false" />
     <None Include="..\.assets\nupkg-icon.png" Pack="true" Visible="false" PackagePath="" />
+    <None Include="..\README.md" Visible="false" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <Target Name="_Hotkeys_GenerateScriptLoaderJS" BeforeTargets="BeforeBuild">
