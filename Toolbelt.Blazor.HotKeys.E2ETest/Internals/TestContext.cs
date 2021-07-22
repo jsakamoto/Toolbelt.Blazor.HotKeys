@@ -12,8 +12,8 @@ namespace Toolbelt.Blazor.HotKeys.E2ETest
         public static TestContext Instance { get; private set; } = null!;
 
         private readonly IReadOnlyDictionary<HostingModel, SampleSite> SampleSites = new Dictionary<HostingModel, SampleSite> {
-            { HostingModel.Wasm31, new SampleSite(5011, "Client/SampleSite.Client.Net31") },
-            { HostingModel.Wasm50, new SampleSite(5012, "Client/SampleSite.Client.Net5") },
+            { HostingModel.Wasm31, new SampleSite(5011, "Client31") },
+            { HostingModel.Wasm50, new SampleSite(5012, "Client") },
             { HostingModel.Server31, new SampleSite(5013, "Server", "netcoreapp3.1") },
             { HostingModel.Server50, new SampleSite(5014, "Server", "net5.0") },
         };
