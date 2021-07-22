@@ -13,7 +13,7 @@
 {
     // "PreventDefault = true" will works only on a Blazor WebAssembly app.
     <div class="hot-keys-cheat-sheet alert alert-secondary mt-4">
-        In this page, <span class="key">Ctrl</span>+<span class="key">P</span> (open print dialog) is disallowed.
+        In this page, <span class="key">Ctrl</span>+<span class="key">A</span> (select all of the contents) is disallowed.
     </div>
 }
 
@@ -39,7 +39,7 @@
 
     private void HotKeys_KeyDown(object sender, HotKeyDownEventArgs e)
     {
-        if (e.ModKeys == ModKeys.Ctrl && e.Key == Keys.P && e.IsWasm)
+        if (e.ModKeys == ModKeys.Ctrl && e.Key == Keys.A && e.IsWasm)
         {
             e.PreventDefault = true;
         }

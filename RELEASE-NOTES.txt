@@ -1,3 +1,6 @@
+v.11.0.0
+- Improve: load the helper JavaScript by Blazor JavaScript isolation feature (ES2015 module system) instead of using "eval".
+
 v.10.0.1
 - Fix: A browser's autofill feature causes the unhandled exception.
 

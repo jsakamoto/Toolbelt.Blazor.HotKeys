@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
     <IsPackable>true</IsPackable>
     <LangVersion>Latest</LangVersion>
     <RazorLangVersion>3.0</RazorLangVersion>
@@ -13,25 +13,32 @@
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <Copyright>Copyright © 2018-2021 J.Sakamoto, Mozilla Public License 2.0</Copyright>
     <Authors>J.Sakamoto</Authors>
-    <Version>10.0.1.0</Version>
+    <Version>11.0.0-preview.1</Version>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/jsakamoto/Toolbelt.Blazor.HotKeys/</PackageProjectUrl>
     <Description>Configuration-centric keyboard shortcuts for your Blazor apps.</Description>
     <PackageTags>blazor,hotkey</PackageTags>
     <PackageReleaseNotes>(Please write the package release notes in "RELEASE NOTES.txt".)</PackageReleaseNotes>
     <PackageIcon>nupkg-icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageOutputPath>..\_dist\</PackageOutputPath>
   </PropertyGroup>
+  <PropertyGroup>
+    <DefineConstants Condition=" '$(TargetFramework)' != 'netstandard2.0' ">$(DefineConstants);ENABLE_JSMODULE</DefineConstants>
+  </PropertyGroup>
 
-  <ItemGroup>
-    <Content Update="**\*.json">
-      <Pack>false</Pack>
-    </Content>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="3.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="3.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.0.0" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="3.7.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -59,13 +66,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\.assets\nupkg-icon.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-      <Visible>false</Visible>
-    </None>
+    <Content Update="**\*.json" Pack="false" />
+    <None Include="..\.assets\nupkg-icon.png" Pack="true" Visible="false" PackagePath="" />
+    <None Include="..\README.md" Visible="false" Pack="true" PackagePath="\" />
   </ItemGroup>
 
+  <Target Name="_Hotkeys_GenerateScriptLoaderJS" BeforeTargets="BeforeBuild">
+    <PropertyGroup>
+      <_Hotkeys_ScriptLoader>$(_Hotkeys_ScriptLoader);// THIS FILE IS AUTO GENERATED IN THE MSBUILD SCRIPT </_Hotkeys_ScriptLoader>
+      <_Hotkeys_ScriptLoader>$(_Hotkeys_ScriptLoader);import { Toolbelt } from './script.min.js?v=$(Version)'%3b</_Hotkeys_ScriptLoader>
+      <_Hotkeys_ScriptLoader>$(_Hotkeys_ScriptLoader);window['Toolbelt'] = Toolbelt%3b</_Hotkeys_ScriptLoader>
+    </PropertyGroup>
+    <WriteLinesToFile File="wwwroot/boot.js" Lines="$(_Hotkeys_ScriptLoader)" Overwrite="true" WriteOnlyWhenDifferent="true" />
+  </Target>
+  
   <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">
     <ReadLinesFromFile File="../RELEASE-NOTES.txt">
       <Output TaskParameter="Lines" ItemName="ReleaseNoteLines" />

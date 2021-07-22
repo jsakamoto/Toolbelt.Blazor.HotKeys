@@ -1,16 +1,25 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
+    <RazorLangVersion>3.0</RazorLangVersion>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.1.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net5.0' ">
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.0" />
-    <!--<PackageReference Include="Toolbelt.Blazor.HotKeys" Version="10.0.1" />-->
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Toolbelt.Blazor.HotKeys\Toolbelt.Blazor.HotKeys.csproj" />
+    <PackageReference Include="Toolbelt.Blazor.HotKeys" Version="11.0.0-preview.1" />
+    <!--<ProjectReference Include="..\..\Toolbelt.Blazor.HotKeys\Toolbelt.Blazor.HotKeys.csproj" />-->
   </ItemGroup>
 
 </Project>

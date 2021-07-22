@@ -5,16 +5,24 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
 
+#if ENABLE_JSMODULE
+using IJSInterface = Microsoft.JSInterop.IJSObjectReference;
+#else
+using IJSInterface = Microsoft.JSInterop.IJSRuntime;
+#endif
+
 namespace Toolbelt.Blazor.HotKeys
 {
     /// <summary>
     /// A service that provides Hotkey feature.
     /// </summary>
-    public class HotKeys
+    public class HotKeys : IAsyncDisposable
     {
         private volatile bool _Attached = false;
 
-        private readonly IJSRuntime JSRuntime;
+        private readonly IJSRuntime _JSRuntime;
+
+        private IJSInterface _JSModule = null;
 
         private readonly SemaphoreSlim Syncer = new(1, 1);
 
@@ -30,26 +38,35 @@ namespace Toolbelt.Blazor.HotKeys
         /// </summary>
         internal HotKeys(IJSRuntime jSRuntime)
         {
-            this.JSRuntime = jSRuntime;
+            this._JSRuntime = jSRuntime;
         }
 
         /// <summary>
         /// Attach this HotKeys service instance to JavaScript DOM event handler.
         /// </summary>
-        private async Task Attach()
+        private async Task<IJSInterface> Attach()
         {
-            if (_Attached) return;
-            await Syncer.WaitAsync();
+            if (this._Attached) return this._JSModule;
+            await this.Syncer.WaitAsync();
             try
             {
-                if (_Attached) return;
+                if (this._Attached) return this._JSModule;
+
                 var version = this.GetType().Assembly.GetName().Version;
-                var scriptPath = $"_content/Toolbelt.Blazor.HotKeys/script.min.js?v={version}";
-                await JSRuntime.InvokeVoidAsync("eval", "new Promise(r=>((d,t,s)=>(h=>h.querySelector(t+`[src=\"${{s}}\"]`)?r():(e=>(e.src=s,e.onload=r,h.appendChild(e)))(d.createElement(t)))(d.head))(document,'script','" + scriptPath + "'))");
-                await JSRuntime.InvokeVoidAsync("Toolbelt.Blazor.HotKeys.attach", DotNetObjectReference.Create(this), IsWasm);
-                _Attached = true;
+#if ENABLE_JSMODULE
+                var scriptPath = $"./_content/Toolbelt.Blazor.HotKeys/script.min.js?v={version}";
+                this._JSModule = await this._JSRuntime.InvokeAsync<IJSObjectReference>("import", scriptPath);
+#else
+                this._JSModule = this._JSRuntime;
+                var scriptPath = $"./_content/Toolbelt.Blazor.HotKeys/boot.js?v={version}";
+                await this._JSRuntime.InvokeVoidAsync("eval", "new Promise(r=>((d,t,s)=>(h=>h.querySelector(t+`[src=\"${{s}}\"]`)?r():(e=>(e.src=s,e.type='module',e.onload=r,h.appendChild(e)))(d.createElement(t)))(d.head))(document,'script','" + scriptPath + "'))");
+#endif
+                await this._JSModule.InvokeVoidAsync("Toolbelt.Blazor.HotKeys.attach", DotNetObjectReference.Create(this), this.IsWasm);
+
+                this._Attached = true;
+                return this._JSModule;
             }
-            finally { Syncer.Release(); }
+            finally { this.Syncer.Release(); }
         }
 
         /// <summary>
@@ -58,8 +75,8 @@ namespace Toolbelt.Blazor.HotKeys
         /// <returns></returns>
         public HotKeysContext CreateContext()
         {
-            var attachTask = Attach();
-            return new HotKeysContext(this.JSRuntime, attachTask);
+            var attachTask = this.Attach();
+            return new HotKeysContext(attachTask);
         }
 
         /// <summary>
@@ -76,9 +93,18 @@ namespace Toolbelt.Blazor.HotKeys
         public bool OnKeyDown(ModKeys modKeys, string keyName, string srcElementTagName, string srcElementTypeName, string nativeKey, string nativeCode)
         {
             var keyCode = Enum.TryParse<Keys>(keyName, ignoreCase: true, out var k) ? k : (Keys)0;
-            var args = new HotKeyDownEventArgs(modKeys, keyCode, srcElementTagName, srcElementTypeName, IsWasm, nativeKey, nativeCode);
+            var args = new HotKeyDownEventArgs(modKeys, keyCode, srcElementTagName, srcElementTypeName, this.IsWasm, nativeKey, nativeCode);
             KeyDown?.Invoke(null, args);
             return args.PreventDefault;
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+#if ENABLE_JSMODULE
+            if (this._JSModule != null) await this._JSModule.DisposeAsync();
+#else
+            await Task.CompletedTask;
+#endif
         }
     }
 }

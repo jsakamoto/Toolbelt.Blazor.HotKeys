@@ -34,7 +34,7 @@
     [Parameter]
     public bool ShowNativeKeyAndCode { get; set; }
 
-    private readonly List<EnteredKey> EnteredKeys = new();
+    private readonly List<EnteredKey> EnteredKeys = new List<EnteredKey>();
 
     private EnteredKey LastEnteredKey = null;
 
