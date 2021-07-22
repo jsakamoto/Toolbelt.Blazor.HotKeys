@@ -14,12 +14,14 @@
     <base href="/" />
     <link rel="icon" type="image/png" href="favicon.png" />
     <link href="_content/SampleSite.Components/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
-    <link href="_content/SampleSite.Components/css/app.css" rel="stylesheet" />
+    <link href="_content/SampleSite.Components/css/site.css" rel="stylesheet" />
+    <link href="_content/SampleSite.Components/css/site-custom.css" rel="stylesheet" />
     <link href="_content/SampleSite.Components/css/hot-keys-cheat-sheet.css" rel="stylesheet" />
-    <link href="SampleSite.Server.styles.css" rel="stylesheet" />
 </head>
 <body>
-    <component type="typeof(SampleSite.Components.App)" render-mode="ServerPrerendered" />
+    <app>
+        <component type="typeof(SampleSite.Components.App)" render-mode="ServerPrerendered" />
+    </app>
 
     <div id="blazor-error-ui">
         <environment include="Staging,Production">

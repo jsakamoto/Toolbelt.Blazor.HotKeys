@@ -34,7 +34,7 @@
             ModKeys.Alt | ModKeys.Ctrl | ModKeys.Shift
         };
 
-        foreach (var key in Enum.GetValues<Keys>())
+        foreach (Keys key in Enum.GetValues(typeof(Keys)))
         {
             this.HotKeysContext.Add(ModKeys.None, key, OnHotKey);
 
