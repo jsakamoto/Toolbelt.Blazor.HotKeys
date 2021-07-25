@@ -28,24 +28,21 @@
     </div>
 </form>
 
-
 @if (!_isBusy)
 {
-
     <input type="text" id="scannedCodeResult" class="form-control" style="min-width: 100px;"
-           @bind-value=@_scannedCode
-           placeholder="Scanned BarCode" />
+       @bind-value=@_scannedCode
+       placeholder="Scanned BarCode" />
 
     <input type="text" class="form-control" style="min-width: 100px;"
-           @bind-value=@_scannedNumpads
-           placeholder="Scanned Numpads" />
+       @bind-value=@_scannedNumpads
+       placeholder="Scanned Numpads" />
 }
 else
 {
     <div class="spinner-border text-primary" role="status">
         <span class="sr-only">Scanning...</span>
     </div>
-
 }
 
 @code
@@ -66,7 +63,6 @@ else
         this.HotKeys.CreateContext();
         this.HotKeys.KeyDown += BarcodeScanner_OnKeyDown;
     }
-
 
     private void BarcodeScanner_OnKeyDown(object sender, HotKeyDownEventArgs e)
     {
@@ -107,16 +103,9 @@ else
                             _scannedCode += (char)(asciicode);
                         }
                     }
-
-
                 }
-
             }
-
-
-
         }
-
     }
 
     void ClearInputs()
@@ -130,6 +119,4 @@ else
     {
         this.HotKeys.KeyDown -= BarcodeScanner_OnKeyDown;
     }
-
-
 }
