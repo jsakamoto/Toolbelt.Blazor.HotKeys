@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Toolbelt.Blazor.HotKeys" Version="11.0.0-preview.1" />
+    <PackageReference Include="Toolbelt.Blazor.HotKeys" Version="11.0.0-preview.2" />
     <!--<ProjectReference Include="..\..\Toolbelt.Blazor.HotKeys\Toolbelt.Blazor.HotKeys.csproj" />-->
   </ItemGroup>
 
