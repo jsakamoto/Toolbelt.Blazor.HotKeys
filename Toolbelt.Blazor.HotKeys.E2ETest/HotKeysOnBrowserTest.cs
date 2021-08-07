@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework;
 using OpenQA.Selenium;
@@ -165,6 +166,33 @@ namespace Toolbelt.Blazor.HotKeys.E2ETest
             driver.SendKeys("a", ctrl: true);
             Thread.Sleep(200);
             driver.IsContentsSelected().IsTrue();
+        }
+
+        [Test]
+        [TestCaseSource(typeof(HotKeysOnBrowserTest), nameof(AllHostingModels))]
+        public void HelperJavaScript_Namespace_Not_Conflict_Test(HostingModel hostingModel)
+        {
+            var context = TestContext.Instance;
+            context.StartHost(hostingModel);
+
+            // Navigate to the "Save Text" page,
+            var driver = context.WebDriver;
+            driver.GoToUrlAndWait(context.GetHostUrl(hostingModel), "/save-text");
+
+            // Input random text into the testbox,
+            var text = Guid.NewGuid().ToString("N");
+            driver.FindElementById("text-box-1").SendKeys(text);
+            Thread.Sleep(200);
+
+            // Enter Ctrl + S,
+            driver.SendKeys("s", ctrl: true);
+            Thread.Sleep(200);
+
+            // Then the inputted text will appear in the area for display
+            // by works of the helper JavaScript code
+            // that lives in the "Toolbelt.Blazor" namespace.
+            //(If the namespace were conflicted, it wouldn't work.)
+            driver.FindElementById("saved-text-list").Text.Is("\"" + text + "\"");
         }
     }
 }

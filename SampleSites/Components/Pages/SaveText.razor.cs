@@ -40,7 +40,7 @@ namespace SampleSite.Components.Pages
 
         private async Task OnSaveText()
         {
-            await this.JS.InvokeVoidAsync("fireOnChange", this.InputElement);
+            await this.JS.InvokeVoidAsync("Toolbelt.Blazor.fireOnChange", this.InputElement);
 
             this.SavedTexts.Add(this.InpuText);
             this.StateHasChanged();

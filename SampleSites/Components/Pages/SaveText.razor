@@ -3,7 +3,7 @@
 <p>
     <fieldset>
         <legend>Input text</legend>
-        <input type="text" @ref="InputElement" @bind="InpuText" />
+        <input id="text-box-1" type="text" @ref="InputElement" @bind="InpuText" />
     </fieldset>
 </p>
 
@@ -13,8 +13,10 @@
 
 <fieldset>
     <legend>Saved text</legend>
-    @foreach (var savedText in this.SavedTexts)
-    {
-        <div>"@(savedText)"</div>
-    }
+    <div id="saved-text-list">
+        @foreach (var savedText in this.SavedTexts)
+        {
+            <div>"@(savedText)"</div>
+        }
+    </div>
 </fieldset>
