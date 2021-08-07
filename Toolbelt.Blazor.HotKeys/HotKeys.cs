@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -52,14 +53,18 @@ namespace Toolbelt.Blazor.HotKeys
             {
                 if (this._Attached) return this._JSModule;
 
-                var version = this.GetType().Assembly.GetName().Version;
+                var assembly = this.GetType().Assembly;
+                var version = assembly
+                    .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
+                    .InformationalVersion ?? assembly.GetName().Version.ToString();
 #if ENABLE_JSMODULE
-                var scriptPath = $"./_content/Toolbelt.Blazor.HotKeys/script.min.js?v={version}";
+                var scriptPath = $"./_content/Toolbelt.Blazor.HotKeys/script.module.min.js?v={version}";
                 this._JSModule = await this._JSRuntime.InvokeAsync<IJSObjectReference>("import", scriptPath);
 #else
                 this._JSModule = this._JSRuntime;
-                var scriptPath = $"./_content/Toolbelt.Blazor.HotKeys/boot.js?v={version}";
-                await this._JSRuntime.InvokeVoidAsync("eval", "new Promise(r=>((d,t,s)=>(h=>h.querySelector(t+`[src=\"${{s}}\"]`)?r():(e=>(e.src=s,e.type='module',e.onload=r,h.appendChild(e)))(d.createElement(t)))(d.head))(document,'script','" + scriptPath + "'))");
+                var scriptPath = "./_content/Toolbelt.Blazor.HotKeys/script.min.js";
+                await this._JSRuntime.InvokeVoidAsync("eval", "new Promise(r=>((d,t,s,v)=>(h=>h.querySelector(t+`[src^=\"${s}\"]`)?r():(e=>(e.src=(s+v),e.onload=r,h.appendChild(e)))(d.createElement(t)))(d.head))(document,'script','" + scriptPath + "','?v=" + version + "'))");
+                await this._JSRuntime.InvokeVoidAsync("eval", "Toolbelt.Blazor.HotKeys.ready");
 #endif
                 await this._JSModule.InvokeVoidAsync("Toolbelt.Blazor.HotKeys.attach", DotNetObjectReference.Create(this), this.IsWasm);
 
