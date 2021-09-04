@@ -27,12 +27,10 @@ This library was created inspired by ["angular-hotkeys"](https://github.com/chie
 
 Supported Blazor versions are as below.
 
-- v.3.1
-    - including previews and release candidates.
-- v.3.2
-    - including previews and release candidates.
-- v.5.0
-    - including previews and release candidates.
+- v.3.1 (including previews and release candidates.)
+- v.3.2 (including previews and release candidates.)
+- v.5.0 (including previews and release candidates.)
+- v.6.0 (including previews and release candidates.)
 
 ## How to install and use?
 
