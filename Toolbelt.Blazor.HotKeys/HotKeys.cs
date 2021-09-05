@@ -6,12 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
 
-#if ENABLE_JSMODULE
-using IJSInterface = Microsoft.JSInterop.IJSObjectReference;
-#else
-using IJSInterface = Microsoft.JSInterop.IJSRuntime;
-#endif
-
 namespace Toolbelt.Blazor.HotKeys
 {
     /// <summary>
@@ -23,7 +17,9 @@ namespace Toolbelt.Blazor.HotKeys
 
         private readonly IJSRuntime _JSRuntime;
 
-        private IJSInterface _JSModule = null;
+        private readonly HotKeysOptions _Options;
+
+        private JSInvoker _JSInvoker = null;
 
         private readonly SemaphoreSlim Syncer = new(1, 1);
 
@@ -37,39 +33,52 @@ namespace Toolbelt.Blazor.HotKeys
         /// <summary>
         /// Initialize a new instance of the HotKeys class.
         /// </summary>
-        internal HotKeys(IJSRuntime jSRuntime)
+        internal HotKeys(IJSRuntime jSRuntime, HotKeysOptions options)
         {
             this._JSRuntime = jSRuntime;
+            this._Options = options;
         }
 
         /// <summary>
         /// Attach this HotKeys service instance to JavaScript DOM event handler.
         /// </summary>
-        private async Task<IJSInterface> Attach()
+        private async Task<JSInvoker> Attach()
         {
-            if (this._Attached) return this._JSModule;
+            if (this._Attached) return this._JSInvoker;
             await this.Syncer.WaitAsync();
             try
             {
-                if (this._Attached) return this._JSModule;
+                if (this._Attached) return this._JSInvoker;
 
                 var assembly = this.GetType().Assembly;
                 var version = assembly
                     .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
                     .InformationalVersion ?? assembly.GetName().Version.ToString();
 #if ENABLE_JSMODULE
-                var scriptPath = $"./_content/Toolbelt.Blazor.HotKeys/script.module.min.js?v={version}";
-                this._JSModule = await this._JSRuntime.InvokeAsync<IJSObjectReference>("import", scriptPath);
+                if (!this._Options.DisableClientScriptAutoInjection)
+                {
+                    var scriptPath = $"./_content/Toolbelt.Blazor.HotKeys/script.module.min.js?v={version}";
+                    var jsModule = await this._JSRuntime.InvokeAsync<IJSObjectReference>("import", scriptPath);
+                    this._JSInvoker = new JSInvoker(this._JSRuntime, jsModule);
+                }
+                else
+                {
+                    this._JSInvoker = new JSInvoker(this._JSRuntime, null);
+                    try { await this._JSRuntime.InvokeVoidAsync("eval", "Toolbelt.Blazor.HotKeys.ready"); } catch { }
+                }
 #else
-                this._JSModule = this._JSRuntime;
-                var scriptPath = "./_content/Toolbelt.Blazor.HotKeys/script.min.js";
-                await this._JSRuntime.InvokeVoidAsync("eval", "new Promise(r=>((d,t,s,v)=>(h=>h.querySelector(t+`[src^=\"${s}\"]`)?r():(e=>(e.src=(s+v),e.onload=r,h.appendChild(e)))(d.createElement(t)))(d.head))(document,'script','" + scriptPath + "','?v=" + version + "'))");
-                await this._JSRuntime.InvokeVoidAsync("eval", "Toolbelt.Blazor.HotKeys.ready");
+                this._JSInvoker = new JSInvoker(this._JSRuntime);
+                if (!this._Options.DisableClientScriptAutoInjection)
+                {
+                    var scriptPath = "./_content/Toolbelt.Blazor.HotKeys/script.min.js";
+                    await this._JSRuntime.InvokeVoidAsync("eval", "new Promise(r=>((d,t,s,v)=>(h=>h.querySelector(t+`[src^=\"${s}\"]`)?r():(e=>(e.src=(s+v),e.onload=r,h.appendChild(e)))(d.createElement(t)))(d.head))(document,'script','" + scriptPath + "','?v=" + version + "'))");
+                }
+                try { await this._JSRuntime.InvokeVoidAsync("eval", "Toolbelt.Blazor.HotKeys.ready"); } catch { }
 #endif
-                await this._JSModule.InvokeVoidAsync("Toolbelt.Blazor.HotKeys.attach", DotNetObjectReference.Create(this), this.IsWasm);
+                await this._JSInvoker.InvokeAsync<object>("Toolbelt.Blazor.HotKeys.attach", DotNetObjectReference.Create(this), this.IsWasm);
 
                 this._Attached = true;
-                return this._JSModule;
+                return this._JSInvoker;
             }
             finally { this.Syncer.Release(); }
         }
@@ -105,11 +114,7 @@ namespace Toolbelt.Blazor.HotKeys
 
         public async ValueTask DisposeAsync()
         {
-#if ENABLE_JSMODULE
-            if (this._JSModule != null) await this._JSModule.DisposeAsync();
-#else
-            await Task.CompletedTask;
-#endif
+            if (this._JSInvoker != null) await this._JSInvoker.DisposeAsync();
         }
     }
 }

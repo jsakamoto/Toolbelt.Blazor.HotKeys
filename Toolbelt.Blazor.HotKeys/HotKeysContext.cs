@@ -3,12 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
 
-#if ENABLE_JSMODULE
-using IJSInterface = Microsoft.JSInterop.IJSObjectReference;
-#else
-using IJSInterface = Microsoft.JSInterop.IJSRuntime;
-#endif
-
 namespace Toolbelt.Blazor.HotKeys
 {
     /// <summary>
@@ -21,12 +15,12 @@ namespace Toolbelt.Blazor.HotKeys
         /// </summary>
         public List<HotKeyEntry> Keys { get; } = new List<HotKeyEntry>();
 
-        private readonly Task<IJSInterface> _AttachTask;
+        private readonly Task<JSInvoker> _AttachTask;
 
         /// <summary>
         /// Initialize a new instance of the HotKeysContext class.
         /// </summary>
-        internal HotKeysContext(Task<IJSInterface> attachTask)
+        internal HotKeysContext(Task<JSInvoker> attachTask)
         {
             this._AttachTask = attachTask;
         }
@@ -193,7 +187,7 @@ namespace Toolbelt.Blazor.HotKeys
             {
                 if (t.IsCompleted && !t.IsFaulted)
                 {
-                    return t.Result.InvokeVoidAsync("Toolbelt.Blazor.HotKeys.unregister", hotKeyEntry.Id).AsTask();
+                    return t.Result.InvokeAsync<object>("Toolbelt.Blazor.HotKeys.unregister", hotKeyEntry.Id).AsTask();
                 }
                 else
                 {
