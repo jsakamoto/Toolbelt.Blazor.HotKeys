@@ -26,7 +26,10 @@ namespace SampleSite.Client
             services
                 .AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseAddress) })
                 .AddScoped<IWeatherForecastService, WeatherForecastService>()
-                .AddHotKeys();
+                .AddHotKeys(options =>
+                {
+                    //options.DisableClientScriptAutoInjection = true;
+                });
         }
     }
 }
