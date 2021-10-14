@@ -44,23 +44,23 @@ Supported Blazor versions are as below.
 
 **Step.2** Register "HotKeys" service into the DI container.
 
-If the Blazor version of the project is ver.3.1 preview 4 or earlyer, you should add the code into  `ConfigureService` method in the `Startup` class of your Blazor application.
+If the Blazor version of the project is ver.3.1 preview 4 or earlier, you should add the code into the `ConfigureService` method in the `Startup` class of your Blazor application.
 
 ```csharp
-using Toolbelt.Blazor.Extensions.DependencyInjection; // <- Add this line, and...
+using Toolbelt.Blazor.Extensions.DependencyInjection; // 1. Add this line
 ...
 public class Startup
 {
   public void ConfigureServices(IServiceCollection services)
   {
-    services.AddHotKeys(); // <- Add this line.
+    services.AddHotKeys(); // 2. Add this line
     ...
 ```
 
-If the Blazor version of the project is ver.3.2 preview 1 or later, you should add the code into  `Main` method in the `Program` class of your Blazor application.
+If the Blazor version of the project is ver.3.2 preview 1 or later, you should add the code into your `Main` method in the `Program` class of your Blazor application.
 
 ```csharp
-using Toolbelt.Blazor.Extensions.DependencyInjection; // <- Add this line, and...
+using Toolbelt.Blazor.Extensions.DependencyInjection; // 1. Add this line
 ...
 public class Program
 {
@@ -68,7 +68,7 @@ public class Program
   {
     var builder = WebAssemblyHostBuilder.CreateDefault(args);
     ...
-    builder.Services.AddHotKeys(); // <!- Add this line.
+    builder.Services.AddHotKeys(); // 2. Add this line
     ...
 ```
 
@@ -92,8 +92,8 @@ public class Program
 
 ```razor
 @implements IDisposable
-@using Toolbelt.Blazor.HotKeys @* <- Add this, and ... *@
-@inject HotKeys HotKeys @* <- And add this. *@
+@using Toolbelt.Blazor.HotKeys @* 1. Add this *@
+@inject HotKeys HotKeys @* 2. Add this *@
 ...
 ```
 
@@ -135,7 +135,7 @@ Please remember that you have to keep the `HotKeys Context` object in the compon
   ...
   public void Dispose()
   {
-    this.HotKeysContext.Dispose(); // <- Add this.
+    this.HotKeysContext.Dispose(); // 1. Add this
   }
 }
 ```
