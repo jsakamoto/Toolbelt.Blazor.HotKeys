@@ -53,7 +53,7 @@ namespace Toolbelt.Blazor.HotKeys.E2ETest
             driver.Counter_Should_Be(2);
 
             // Show and hide the cheatSeetElement by entering "?" and ESC key.
-            var cheatSeetElement = driver.FindElementByCssSelector(".popup-container");
+            var cheatSeetElement = driver.FindElement(By.CssSelector(".popup-container"));
             cheatSeetElement.Displayed.IsFalse();
 
             driver.SendKeys("?");
@@ -85,13 +85,13 @@ namespace Toolbelt.Blazor.HotKeys.E2ETest
             driver.Url_Should_Be("/test/bykeys");
 
             // and shows cheat sheet.
-            var cheatSeetElement = driver.FindElementByCssSelector(".popup-container");
+            var cheatSeetElement = driver.FindElement(By.CssSelector(".popup-container"));
             driver.SendKeys("?");
             Thread.Sleep(200);
             cheatSeetElement.Displayed.IsTrue();
 
             // Entering "C", "F", "Shift+H" in an input element has no effect.
-            var inputElement = driver.FindElementByCssSelector(".hot-keys-cheat-sheet input[type=text]");
+            var inputElement = driver.FindElement(By.CssSelector(".hot-keys-cheat-sheet input[type=text]"));
             inputElement.SendKeys("cfH");
             inputElement.GetAttribute("value").Is("cfH");
             Thread.Sleep(200);
@@ -116,13 +116,13 @@ namespace Toolbelt.Blazor.HotKeys.E2ETest
             driver.Url_Should_Be("/test/bykeys");
 
             // and shows cheat sheet.
-            var cheatSeetElement = driver.FindElementByCssSelector(".popup-container");
+            var cheatSeetElement = driver.FindElement(By.CssSelector(".popup-container"));
             driver.SendKeys("?");
             Thread.Sleep(200);
             cheatSeetElement.Displayed.IsTrue();
 
             // Entering "F" key in an input element has no effect.
-            var inputElement = driver.FindElementByCssSelector(".hot-keys-cheat-sheet input[type=checkbox]");
+            var inputElement = driver.FindElement(By.CssSelector(".hot-keys-cheat-sheet input[type=checkbox]"));
             inputElement.Click();
             Thread.Sleep(200);
             inputElement.SendKeys("f");
@@ -181,7 +181,7 @@ namespace Toolbelt.Blazor.HotKeys.E2ETest
 
             // Input random text into the testbox,
             var text = Guid.NewGuid().ToString("N");
-            driver.FindElementById("text-box-1").SendKeys(text);
+            driver.FindElement(By.Id("text-box-1")).SendKeys(text);
             Thread.Sleep(200);
 
             // Enter Ctrl + S,
@@ -192,7 +192,7 @@ namespace Toolbelt.Blazor.HotKeys.E2ETest
             // by works of the helper JavaScript code
             // that lives in the "Toolbelt.Blazor" namespace.
             //(If the namespace were conflicted, it wouldn't work.)
-            driver.FindElementById("saved-text-list").Text.Is("\"" + text + "\"");
+            driver.FindElement(By.Id("saved-text-list")).Text.Is("\"" + text + "\"");
         }
     }
 }
