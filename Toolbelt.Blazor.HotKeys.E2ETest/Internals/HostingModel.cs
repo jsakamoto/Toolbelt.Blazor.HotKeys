@@ -4,7 +4,9 @@
     {
         Wasm31,
         Wasm50,
-        Server50,
+        Wasm60,
         Server31,
+        Server50,
+        Server60,
     }
 }

@@ -20,7 +20,7 @@ jobs:
 
       # Publish the site
       - name: Publish
-        run: dotnet publish SampleSites/Client/SampleSite.Client.csproj -c Release -o public -p:GHPages=true
+        run: dotnet publish SampleSites/Client/SampleSite.Client.csproj -c:Release -o:public -p:GHPages=true -f:net5.0
 
       # Deploy the site
       - name: Deploy

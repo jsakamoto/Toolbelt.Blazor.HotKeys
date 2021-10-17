@@ -13,9 +13,11 @@ namespace Toolbelt.Blazor.HotKeys.E2ETest
 
         private readonly IReadOnlyDictionary<HostingModel, SampleSite> SampleSites = new Dictionary<HostingModel, SampleSite> {
             { HostingModel.Wasm31, new SampleSite(5011, "Client31") },
-            { HostingModel.Wasm50, new SampleSite(5012, "Client") },
-            { HostingModel.Server31, new SampleSite(5013, "Server", "netcoreapp3.1") },
-            { HostingModel.Server50, new SampleSite(5014, "Server", "net5.0") },
+            { HostingModel.Wasm50, new SampleSite(5012, "Client", "net5.0") },
+            { HostingModel.Wasm60, new SampleSite(5013, "Client", "net6.0") },
+            { HostingModel.Server31, new SampleSite(5014, "Server", "netcoreapp3.1") },
+            { HostingModel.Server50, new SampleSite(5015, "Server", "net5.0") },
+            { HostingModel.Server60, new SampleSite(5016, "Server", "net6.0") },
         };
 
         private ChromeDriver? _WebDriver;

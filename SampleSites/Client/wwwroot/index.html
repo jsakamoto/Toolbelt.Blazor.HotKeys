@@ -26,39 +26,33 @@
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
     <script>
-
-        const map = {
+        const convertToKeyNameMap = {
             "Escape": "ESC",
             "Control": "Ctrl",
             "OS": "Meta",
             "Minus": "Hyphen",
             "Quote": "SingleQuote",
+            "Decimal": "Period",
         };
-
-        const regularizeKeyName = (keyName) => {
-            if (typeof (keyName) === 'undefined') return 'undefined';
-
-            // "Digit1" -> "Num1"
-            const converted = /^Digit\d$/.test(keyName) ? 'Num' + keyName.charAt(5) :
-                // "VolumeUp" -> "AudioVolumeUp"
-                /^Volume.+$/.test(keyName) ? 'Audio' + keyName :
-                    // "ArrowUp" -> "Up"
-                    /^Arrow.+$/.test(keyName) ? keyName.substr(5) :
-                        // "ShiftLeft" -> "Shift"
-                        // "SACOM" ... ("S"hift|"A"lt|"C"ontrol|"O"S|"M"eta)(Left|Right)
-                        /^[SACOM].+(Left|Right)$/.test(keyName) ? keyName.replace(/(Left|Right)$/, '') :
-                            // "BracketLeft" -> "BlaceLeft"
-                            // "PageUp" -> "PgUp"
-                            keyName.replace(/^Bracket/, 'Blace').replace(/^Page/, 'Pg');
-            return map[converted] || converted;
+        function convertToKeyName(ev) {
+            const converted = convertToKeyNameLevel2(ev.code || ev.key);
+            return convertToKeyNameMap[converted] || converted;
         }
-
+        function convertToKeyNameLevel2(codeOrKey) {
+            const match = (pattern) => { var _a; return (_a = codeOrKey.match(pattern)) === null || _a === void 0 ? void 0 : _a.input; };
+            switch (codeOrKey) {
+                case match(/^Key[A-Z]/): return codeOrKey.charAt(3);
+                case match(/^Digit\d$/): return 'Num' + codeOrKey.charAt(5);
+                case match(/^Numpad\d$/): return 'Num' + codeOrKey.charAt(6);
+                case match(/^Volume.+$/): return 'Audio' + codeOrKey;
+                case match(/^Arrow.+$/): return codeOrKey.substr(5);
+                case match(/^[SACOM].+(Left|Right)$/): return codeOrKey.replace(/(Left|Right)$/, '');
+                default: return codeOrKey.replace(/^Bracket/, 'Blace').replace(/^Page/, 'Pg').replace(/^Numpad/, '');
+            }
+        }
         document.addEventListener('keydown', ev => {
-            const keyName =
-                /^[a-z]$/i.test(ev.key) ? ev.key.toUpperCase() :
-                    /^\d$/.test(ev.key) ? 'Num' + ev.key :
-                        regularizeKeyName(ev.code || ev.key);
-            console.log(`keyName: ${keyName} (key: ${ev.key}, code: ${ev.code}, keyCode: 0x${(ev.keyCode || 0).toString(16)})`);
+            const keyName = convertToKeyName(ev);
+            console.log(`keyName: ${keyName} (code: ${ev.code}, key: ${ev.key}, keyCode: 0x${(ev.keyCode || 0).toString(16)})`);
         });
     </script>
     <script src="_content/SampleSite.Components/helper.js"></script>

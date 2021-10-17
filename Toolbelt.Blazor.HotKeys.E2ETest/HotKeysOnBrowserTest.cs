@@ -11,13 +11,16 @@ namespace Toolbelt.Blazor.HotKeys.E2ETest
         public static IEnumerable<HostingModel> AllHostingModels { get; } = new[] {
             HostingModel.Wasm31,
             HostingModel.Wasm50,
+            HostingModel.Wasm60,
             HostingModel.Server31,
             HostingModel.Server50,
+            HostingModel.Server60,
         };
 
         public static IEnumerable<HostingModel> WasmHostingModels { get; } = new[] {
             HostingModel.Wasm31,
             HostingModel.Wasm50,
+            HostingModel.Wasm60,
         };
 
         [Test]
