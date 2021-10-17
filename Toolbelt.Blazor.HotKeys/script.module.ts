@@ -128,26 +128,36 @@
     };
 
     function convertToKeyName(ev: KeyboardEvent): string {
-        return /^[a-z]$/i.test(ev.key) ? ev.key.toUpperCase() :
-            /^\d$/.test(ev.key) ? 'Num' + ev.key :
-                convertToKeyNameLevel2(ev.code || ev.key);
+        const converted = convertToKeyNameLevel2(ev.code || ev.key);
+        return convertToKeyNameMap[converted] || converted;
     }
 
-    function convertToKeyNameLevel2(keyName: string): string {
-        // "Digit1" -> "Num1"
-        const converted = /^Digit\d$/.test(keyName) ? 'Num' + keyName.charAt(5) :
+    function convertToKeyNameLevel2(codeOrKey: string): string {
+        const match = (pattern: RegExp) => codeOrKey.match(pattern)?.input;
+        switch (codeOrKey) {
+
+            // "KeyA/B/C..." -> "A/B/C..."
+            case match(/^Key[A-Z]/): return codeOrKey.charAt(3);
+
+            // "Digit1" -> "Num1"
+            case match(/^Digit\d$/): return 'Num' + codeOrKey.charAt(5);
+
             // "Numpad1" -> "Num1"
-            /^Numpad\d$/.test(keyName) ? 'Num' + keyName.charAt(6) :
-                // "VolumeUp" -> "AudioVolumeUp"
-                /^Volume.+$/.test(keyName) ? 'Audio' + keyName :
-                    // "ArrowUp" -> "Up"
-                    /^Arrow.+$/.test(keyName) ? keyName.substr(5) :
-                        // "ShiftLeft" -> "Shift"
-                        // "SACOM" ... ("S"hift|"A"lt|"C"ontrol|"O"S|"M"eta)(Left|Right)
-                        /^[SACOM].+(Left|Right)$/.test(keyName) ? keyName.replace(/(Left|Right)$/, '') :
-                            // "BracketLeft" -> "BlaceLeft"
-                            // "PageUp" -> "PgUp"
-                            keyName.replace(/^Bracket/, 'Blace').replace(/^Page/, 'Pg').replace(/^Numpad/, '');
-        return convertToKeyNameMap[converted] || converted;
+            case match(/^Numpad\d$/): return 'Num' + codeOrKey.charAt(6);
+
+            // "VolumeUp/Down" -> "AudioVolumeUp/Down"
+            case match(/^Volume.+$/): return 'Audio' + codeOrKey;
+
+            // "ArrowUp/Down/Left/Right" -> "Up/Down/Left/Right"
+            case match(/^Arrow.+$/): return codeOrKey.substr(5);
+
+            // "ShiftLeft" -> "Shift"
+            // "SACOM" ... ("S"hift|"A"lt|"C"ontrol|"O"S|"M"eta)(Left|Right)
+            case match(/^[SACOM].+(Left|Right)$/): return codeOrKey.replace(/(Left|Right)$/, '');
+
+            // "BracketLeft/Right" -> "BlaceLeft/Right"
+            // "PageUp/Down" -> "PgUp/Down"
+            default: return codeOrKey.replace(/^Bracket/, 'Blace').replace(/^Page/, 'Pg').replace(/^Numpad/, '');
+        }
     }
 }

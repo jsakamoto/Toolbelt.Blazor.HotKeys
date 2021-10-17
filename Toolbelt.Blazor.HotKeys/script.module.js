@@ -101,18 +101,20 @@ export var Toolbelt;
                 "Decimal": "Period",
             };
             function convertToKeyName(ev) {
-                return /^[a-z]$/i.test(ev.key) ? ev.key.toUpperCase() :
-                    /^\d$/.test(ev.key) ? 'Num' + ev.key :
-                        convertToKeyNameLevel2(ev.code || ev.key);
-            }
-            function convertToKeyNameLevel2(keyName) {
-                const converted = /^Digit\d$/.test(keyName) ? 'Num' + keyName.charAt(5) :
-                    /^Numpad\d$/.test(keyName) ? 'Num' + keyName.charAt(6) :
-                        /^Volume.+$/.test(keyName) ? 'Audio' + keyName :
-                            /^Arrow.+$/.test(keyName) ? keyName.substr(5) :
-                                /^[SACOM].+(Left|Right)$/.test(keyName) ? keyName.replace(/(Left|Right)$/, '') :
-                                    keyName.replace(/^Bracket/, 'Blace').replace(/^Page/, 'Pg').replace(/^Numpad/, '');
+                const converted = convertToKeyNameLevel2(ev.code || ev.key);
                 return convertToKeyNameMap[converted] || converted;
+            }
+            function convertToKeyNameLevel2(codeOrKey) {
+                const match = (pattern) => { var _a; return (_a = codeOrKey.match(pattern)) === null || _a === void 0 ? void 0 : _a.input; };
+                switch (codeOrKey) {
+                    case match(/^Key[A-Z]/): return codeOrKey.charAt(3);
+                    case match(/^Digit\d$/): return 'Num' + codeOrKey.charAt(5);
+                    case match(/^Numpad\d$/): return 'Num' + codeOrKey.charAt(6);
+                    case match(/^Volume.+$/): return 'Audio' + codeOrKey;
+                    case match(/^Arrow.+$/): return codeOrKey.substr(5);
+                    case match(/^[SACOM].+(Left|Right)$/): return codeOrKey.replace(/(Left|Right)$/, '');
+                    default: return codeOrKey.replace(/^Bracket/, 'Blace').replace(/^Page/, 'Pg').replace(/^Numpad/, '');
+                }
             }
         })(HotKeys = Blazor.HotKeys || (Blazor.HotKeys = {}));
     })(Blazor = Toolbelt.Blazor || (Toolbelt.Blazor = {}));
