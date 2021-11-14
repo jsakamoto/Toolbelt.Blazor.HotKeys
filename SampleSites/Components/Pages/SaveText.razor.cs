@@ -24,7 +24,7 @@ namespace SampleSite.Components.Pages
         protected override void OnInitialized()
         {
             this.HotKeysContext = this.HotKeys.CreateContext()
-                .Add(ModKeys.Ctrl, Keys.S, () => this.OnSaveText(), allowIn: AllowIn.Input);
+                .Add(ModKeys.Ctrl, Keys.S, () => this.OnSaveText(), exclude: Exclude.TextArea);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
