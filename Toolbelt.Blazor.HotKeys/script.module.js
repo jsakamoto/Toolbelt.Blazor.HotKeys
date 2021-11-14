@@ -5,11 +5,19 @@ export var Toolbelt;
         var HotKeys;
         (function (HotKeys) {
             class HotkeyEntry {
-                constructor(hotKeyEntryWrpper, modKeys, keyName, allowIn) {
+                constructor(hotKeyEntryWrpper, modKeys, keyName, exclude) {
                     this.hotKeyEntryWrpper = hotKeyEntryWrpper;
                     this.modKeys = modKeys;
                     this.keyName = keyName;
-                    this.allowIn = allowIn;
+                    this.exclude = exclude;
+                    const excludeSelectors = [];
+                    if ((exclude & 1) !== 0)
+                        excludeSelectors.push("input[type=text]");
+                    if ((exclude & 2) !== 0)
+                        excludeSelectors.push("input:not([type=text])");
+                    if ((exclude & 4) !== 0)
+                        excludeSelectors.push("textarea");
+                    this.selector = "*:not(" + excludeSelectors.join(",") + ")";
                 }
                 action() {
                     this.hotKeyEntryWrpper.invokeMethodAsync('InvokeAction');
@@ -22,9 +30,9 @@ export var Toolbelt;
                 "BackQuart": "BackQuote",
                 "SingleQuart": "SingleQuote",
             };
-            function register(hotKeyEntryWrpper, modKeys, keyName, allowIn) {
+            function register(hotKeyEntryWrpper, modKeys, keyName, exclude) {
                 const id = idSeq++;
-                const hotKeyEntry = new HotkeyEntry(hotKeyEntryWrpper, modKeys, fixingKeyNameTypoMap[keyName] || keyName, allowIn);
+                const hotKeyEntry = new HotkeyEntry(hotKeyEntryWrpper, modKeys, fixingKeyNameTypoMap[keyName] || keyName, exclude);
                 hotKeyEntries[id] = hotKeyEntry;
                 return id;
             }
@@ -50,23 +58,29 @@ export var Toolbelt;
                         modKeys |= 4;
                     if (e.modKeys !== modKeys)
                         continue;
-                    if (!isAllowedIn(entry, e.tagName, e.type))
+                    if (!isAllowedIn(entry, e))
                         continue;
                     preventDefault = true;
                     entry.action();
                 }
                 return preventDefault;
             }
-            function isAllowedIn(entry, tagName, type) {
-                if (tagName === "TEXTAREA") {
-                    return (entry.allowIn & 2) === 2;
+            function isAllowedIn(entry, e) {
+                if ((entry.exclude & 1) !== 0) {
+                    if (e.tagName === "INPUT" && NonTextInputTypes.indexOf(e.type || '') === -1)
+                        return false;
                 }
-                if (tagName == "INPUT") {
-                    if ((type !== null) &&
-                        (NonTextInputTypes.indexOf(type) !== -1) &&
-                        (entry.allowIn & 4) === 4)
-                        return true;
-                    return (entry.allowIn & 1) === 1;
+                if ((entry.exclude & 2) !== 0) {
+                    if (e.tagName === "INPUT" && NonTextInputTypes.indexOf(e.type || '') !== -1)
+                        return false;
+                }
+                if ((entry.exclude & 4) !== 0) {
+                    if (e.tagName === "TEXTAREA")
+                        return false;
+                }
+                if ((entry.exclude & 8) !== 0) {
+                    if (e.srcElement.contentEditable === "true")
+                        return false;
                 }
                 return true;
             }
@@ -81,9 +95,10 @@ export var Toolbelt;
                     const key = ev.key;
                     const code = ev.code;
                     const keyName = convertToKeyName(ev);
-                    const tagName = ev.srcElement.tagName;
-                    const type = ev.srcElement.getAttribute('type');
-                    const preventDefault1 = onKeyDown({ modKeys, keyName, tagName, type });
+                    const srcElement = ev.srcElement;
+                    const tagName = srcElement.tagName;
+                    const type = srcElement.getAttribute('type');
+                    const preventDefault1 = onKeyDown({ modKeys, keyName, srcElement, tagName, type });
                     const preventDefault2 = isWasm === true ? hotKeysWrpper.invokeMethod('OnKeyDown', modKeys, keyName, tagName, type, key, code) : false;
                     if (preventDefault1 || preventDefault2)
                         ev.preventDefault();

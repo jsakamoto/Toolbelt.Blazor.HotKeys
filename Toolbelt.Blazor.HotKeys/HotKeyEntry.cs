@@ -3,13 +3,14 @@ using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
+using static System.ComponentModel.EditorBrowsableState;
 
 namespace Toolbelt.Blazor.HotKeys
 {
     /// <summary>
     /// Association of key combination and callback action.
     /// </summary>
-    public class HotKeyEntry
+    public partial class HotKeyEntry
     {
         /// <summary>
         /// Get the combination of modifier keys flags.
@@ -35,7 +36,13 @@ namespace Toolbelt.Blazor.HotKeys
         /// <summary>
         /// Get the combination of HTML element flags that will be allowed hotkey works.
         /// </summary>
-        public AllowIn AllowIn { get; }
+        [Obsolete("Reference the \"Exclude\" property instead."), EditorBrowsable(Never)]
+        public AllowIn AllowIn => ExcludeToAllowIn(this.Exclude);
+
+        /// <summary>
+        /// Get the combination of HTML element flags that will be not allowed hotkey works.
+        /// </summary>
+        public Exclude Exclude { get; }
 
         /// <summary>
         /// Get the callback action that will be invoked when user enter modKeys + key combination on the browser.
@@ -46,23 +53,29 @@ namespace Toolbelt.Blazor.HotKeys
 
         internal DotNetObjectReference<HotKeyEntry>? ObjectReference;
 
-        /// <summary>
-        /// Initialize a new instance of the HotKeyEntry class.
-        /// </summary>
-        /// <param name="modKeys">The combination of modifier keys flags.</param>
-        /// <param name="key">The identifier of hotkey.</param>
-        /// <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
-        /// <param name="description">The description of the meaning of this hot key entry.</param>
-        /// <param name="allowIn">The combination of HTML element flags that will be allowed hotkey works.</param>
-        public HotKeyEntry(ModKeys modKeys, Keys key, AllowIn allowIn, string description, Func<HotKeyEntry, Task> action)
+#pragma warning disable CS0618 // Type or member is obsolete
+        private static AllowIn ExcludeToAllowIn(Exclude exclude)
         {
-            ModKeys = modKeys;
-            Key = key;
-            KeyName = key.ToString();
-            AllowIn = allowIn;
-            Description = description;
-            Action = action;
+            var allowIn =
+                (exclude.HasFlag(Exclude.InputText) && exclude.HasFlag(Exclude.InputNonText)) ? AllowIn.None :
+                (!exclude.HasFlag(Exclude.InputText) && exclude.HasFlag(Exclude.InputNonText)) ? AllowIn.Input :
+                (exclude.HasFlag(Exclude.InputText) && !exclude.HasFlag(Exclude.InputNonText)) ? AllowIn.NonTextInput :
+                (!exclude.HasFlag(Exclude.InputText) && !exclude.HasFlag(Exclude.InputNonText)) ? AllowIn.Input :
+                AllowIn.None;
+
+            return allowIn | (exclude.HasFlag(Exclude.TextArea) ? AllowIn.None : AllowIn.TextArea);
         }
+
+        private static Exclude AllowInToExclude(AllowIn allowIn)
+        {
+            var exclude =
+                (!allowIn.HasFlag(AllowIn.Input) && !allowIn.HasFlag(AllowIn.NonTextInput)) ? Exclude.InputText | Exclude.InputNonText :
+                (!allowIn.HasFlag(AllowIn.Input) && allowIn.HasFlag(AllowIn.NonTextInput)) ? Exclude.InputText :
+                Exclude.None;
+
+            return exclude | (allowIn.HasFlag(AllowIn.TextArea) ? Exclude.None : Exclude.TextArea);
+        }
+#pragma warning restore CS0618 // Type or member is obsolete
 
         /// <summary>
         /// Initialize a new instance of the HotKeyEntry class.
@@ -71,36 +84,15 @@ namespace Toolbelt.Blazor.HotKeys
         /// <param name="key">The identifier of hotkey.</param>
         /// <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
         /// <param name="description">The description of the meaning of this hot key entry.</param>
-        /// <param name="allowIn">The combination of HTML element flags that will be allowed hotkey works.</param>
-        public HotKeyEntry(ModKeys modKeys, Keys key, AllowIn allowIn, string description, Func<Task> action)
-            : this(modKeys, key, allowIn, description, _ => action())
+        /// <param name="exclude">The combination of HTML element flags that will be not allowed hotkey works.</param>
+        public HotKeyEntry(ModKeys modKeys, Keys key, Exclude exclude, string description, Func<HotKeyEntry, Task> action)
         {
-        }
-
-        /// <summary>
-        /// Initialize a new instance of the HotKeyEntry class.
-        /// </summary>
-        /// <param name="modKeys">The combination of modifier keys flags.</param>
-        /// <param name="key">The identifier of hotkey.</param>
-        /// <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
-        /// <param name="description">The description of the meaning of this hot key entry.</param>
-        /// <param name="allowIn">The combination of HTML element flags that will be allowed hotkey works.</param>
-        public HotKeyEntry(ModKeys modKeys, Keys key, AllowIn allowIn, string description, Action<HotKeyEntry> action)
-            : this(modKeys, key, allowIn, description, e => { action(e); return Task.CompletedTask; })
-        {
-        }
-
-        /// <summary>
-        /// Initialize a new instance of the HotKeyEntry class.
-        /// </summary>
-        /// <param name="modKeys">The combination of modifier keys flags.</param>
-        /// <param name="key">The identifier of hotkey.</param>
-        /// <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
-        /// <param name="description">The description of the meaning of this hot key entry.</param>
-        /// <param name="allowIn">The combination of HTML element flags that will be allowed hotkey works.</param>
-        public HotKeyEntry(ModKeys modKeys, Keys key, AllowIn allowIn, string description, Action action)
-            : this(modKeys, key, allowIn, description, _ => { action(); return Task.CompletedTask; })
-        {
+            this.ModKeys = modKeys;
+            this.Key = key;
+            this.KeyName = key.ToString();
+            this.Exclude = exclude;
+            this.Description = description;
+            this.Action = action;
         }
 
         /// <summary>
@@ -111,37 +103,7 @@ namespace Toolbelt.Blazor.HotKeys
         /// <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
         /// <param name="description">The description of the meaning of this hot key entry.</param>
         /// <param name="allowIn">The combination of HTML element flags that will be allowed hotkey works.</param>
-        public HotKeyEntry(ModKeys modKeys, string keyName, AllowIn allowIn, string description, Func<HotKeyEntry, Task> action)
-        {
-            ModKeys = modKeys;
-            Key = Enum.TryParse<Keys>(keyName, ignoreCase: true, out var v) ? v : (Keys)0;
-            KeyName = keyName;
-            AllowIn = allowIn;
-            Description = description;
-            Action = action;
-        }
-
-        /// <summary>
-        /// Initialize a new instance of the HotKeyEntry class.
-        /// </summary>
-        /// <param name="modKeys">The combination of modifier keys flags.</param>
-        /// <param name="keyName">The name of the identifier of hotkey.<para>The "key name" is a bit different from the "key" and "code" properties of the DOM event object.<br/> The "key name" comes from "key" and "code", but it is tried to converting to one of the Keys enum values names.<br/>if the keyboard event is not covered by Keys enum values, the "key name" will be the value of "code" or "key".</para></param>
-        /// <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
-        /// <param name="description">The description of the meaning of this hot key entry.</param>
-        /// <param name="allowIn">The combination of HTML element flags that will be allowed hotkey works.</param>
-        public HotKeyEntry(ModKeys modKeys, string keyName, AllowIn allowIn, string description, Func<Task> action)
-            : this(modKeys, keyName, allowIn, description, _ => action())
-        {
-        }
-
-        /// <summary>
-        /// Initialize a new instance of the HotKeyEntry class.
-        /// </summary>
-        /// <param name="modKeys">The combination of modifier keys flags.</param>
-        /// <param name="keyName">The name of the identifier of hotkey.<para>The "key name" is a bit different from the "key" and "code" properties of the DOM event object.<br/> The "key name" comes from "key" and "code", but it is tried to converting to one of the Keys enum values names.<br/>if the keyboard event is not covered by Keys enum values, the "key name" will be the value of "code" or "key".</para></param>
-        /// <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
-        /// <param name="description">The description of the meaning of this hot key entry.</param>
-        /// <param name="allowIn">The combination of HTML element flags that will be allowed hotkey works.</param>
+        [Obsolete("Use the constructor version that has an \"Exclude exclude\" argument isntead."), EditorBrowsable(Never)]
         public HotKeyEntry(ModKeys modKeys, string keyName, AllowIn allowIn, string description, Action<HotKeyEntry> action)
             : this(modKeys, keyName, allowIn, description, e => { action(e); return Task.CompletedTask; })
         {
@@ -155,12 +117,13 @@ namespace Toolbelt.Blazor.HotKeys
         /// <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
         /// <param name="description">The description of the meaning of this hot key entry.</param>
         /// <param name="allowIn">The combination of HTML element flags that will be allowed hotkey works.</param>
+        [Obsolete("Use the constructor version that has an \"Exclude exclude\" argument isntead."), EditorBrowsable(Never)]
         public HotKeyEntry(ModKeys modKeys, string keyName, AllowIn allowIn, string description, Action action)
             : this(modKeys, keyName, allowIn, description, _ => { action(); return Task.CompletedTask; })
         {
         }
 
-        [JSInvokable(nameof(InvokeAction)), EditorBrowsable(EditorBrowsableState.Never)]
+        [JSInvokable(nameof(InvokeAction)), EditorBrowsable(Never)]
         public void InvokeAction()
         {
             this.Action?.Invoke(this);

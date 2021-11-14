@@ -61,10 +61,10 @@
     protected override void OnInitialized()
     {
         HotKeysContext = HotKeys.CreateContext()
-        .Add(ModKeys.Shift, Keys.Slash, _ => SetHotkeysCheatSheetVisible(!this.HotKeysCheatSheetVisible), "", AllowIn.Input) // Open/Close the Hot keys cheat sheet.
-        .Add(ModKeys.None, Keys.ESC, _ => SetHotkeysCheatSheetVisible(false), "", AllowIn.Input) // Close the Hot keys cheat sheet.
-        .Add(ModKeys.None, Keys.H, _ => GoTo("/"), "Go to Home page.", AllowIn.Input)
-        .Add(ModKeys.None, Keys.C, _ => GoTo("/counter"), "Go to Counter page.", AllowIn.NonTextInput)
+        .Add(ModKeys.Shift, Keys.Slash, _ => SetHotkeysCheatSheetVisible(!this.HotKeysCheatSheetVisible), "", Exclude.InputNonText | Exclude.TextArea) // Open/Close the Hot keys cheat sheet.
+        .Add(ModKeys.None, Keys.ESC, _ => SetHotkeysCheatSheetVisible(false), "", Exclude.InputNonText | Exclude.TextArea) // Close the Hot keys cheat sheet.
+        .Add(ModKeys.None, Keys.H, _ => GoTo("/"), "Go to Home page.", Exclude.TextArea | Exclude.ContentEditable)
+        .Add(ModKeys.None, Keys.C, _ => GoTo("/counter"), "Go to Counter page.", Exclude.InputText | Exclude.TextArea)
         .Add(ModKeys.None, Keys.F, _ => GoTo("/fetchdata"), "Go to Fetch data page.")
         .Add(ModKeys.None, Keys.Ctrl, OnCtrlKeyDown, "Double tap to go to Home.");
     }

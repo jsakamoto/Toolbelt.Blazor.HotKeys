@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using static System.ComponentModel.EditorBrowsableState;
 
 namespace Toolbelt.Blazor.HotKeys
 {
@@ -6,6 +8,7 @@ namespace Toolbelt.Blazor.HotKeys
     /// The flags of HTML element that will be allowed hotkey works.
     /// </summary>
     [Flags]
+    [Obsolete("Use \"Exclude\" instead."), EditorBrowsable(Never)]
     public enum AllowIn
     {
         /// <summary>

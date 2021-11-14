@@ -1,10 +1,11 @@
 ﻿export namespace Toolbelt.Blazor.HotKeys {
 
-    const enum AllowIn {
-        None = 0b0000,
-        Input = 0b0001,
-        TextArea = 0b0010,
-        NonTextInput = 0b0100,
+    const enum Exclude {
+        None = 0,
+        InputText = 0b0001,
+        InputNonText = 0b0010,
+        TextArea = 0b0100,
+        ContentEditable = 0b1000
     }
 
     const enum ModKeys {
@@ -22,12 +23,19 @@
     }
 
     class HotkeyEntry {
+        public selector: string;
+
         constructor(
             private hotKeyEntryWrpper: any,
             public modKeys: ModKeys,
             public keyName: string,
-            public allowIn: AllowIn
+            public exclude: Exclude
         ) {
+            const excludeSelectors = [] as string[];
+            if ((exclude & Exclude.InputText) !== 0) excludeSelectors.push("input[type=text]");
+            if ((exclude & Exclude.InputNonText) !== 0) excludeSelectors.push("input:not([type=text])");
+            if ((exclude & Exclude.TextArea) !== 0) excludeSelectors.push("textarea");
+            this.selector = "*:not(" + excludeSelectors.join(",") + ")";
         }
 
         public action(): void {
@@ -45,9 +53,9 @@
         "SingleQuart": "SingleQuote",
     };
 
-    export function register(hotKeyEntryWrpper: any, modKeys: ModKeys, keyName: string, allowIn: AllowIn): number {
+    export function register(hotKeyEntryWrpper: any, modKeys: ModKeys, keyName: string, exclude: Exclude): number {
         const id = idSeq++;
-        const hotKeyEntry = new HotkeyEntry(hotKeyEntryWrpper, modKeys, fixingKeyNameTypoMap[keyName] || keyName, allowIn);
+        const hotKeyEntry = new HotkeyEntry(hotKeyEntryWrpper, modKeys, fixingKeyNameTypoMap[keyName] || keyName, exclude);
         hotKeyEntries[id] = hotKeyEntry;
         return id;
     }
@@ -56,7 +64,7 @@
         delete hotKeyEntries[id];
     }
 
-    function onKeyDown(e: { modKeys: ModKeys, keyName: string, tagName: string, type: string | null }): boolean {
+    function onKeyDown(e: { modKeys: ModKeys, keyName: string, srcElement: HTMLElement, tagName: string, type: string | null }): boolean {
         let preventDefault = false;
 
         for (const key in hotKeyEntries) {
@@ -71,7 +79,7 @@
             if (entry.keyName === 'Alt') modKeys |= ModKeys.Alt;
             if (e.modKeys !== modKeys) continue;
 
-            if (!isAllowedIn(entry, e.tagName, e.type)) continue;
+            if (!isAllowedIn(entry, e)) continue;
 
             preventDefault = true;
 
@@ -81,18 +89,19 @@
         return preventDefault;
     }
 
-    function isAllowedIn(entry: HotkeyEntry, tagName: string, type: string | null): boolean {
-        if (tagName === "TEXTAREA") {
-            return (entry.allowIn & AllowIn.TextArea) === AllowIn.TextArea;
+    function isAllowedIn(entry: HotkeyEntry, e: { srcElement: HTMLElement, tagName: string, type: string | null }): boolean {
+
+        if ((entry.exclude & Exclude.InputText) !== 0) {
+            if (e.tagName === "INPUT" && NonTextInputTypes.indexOf(e.type || '') === -1) return false;
         }
-
-        if (tagName == "INPUT") {
-            if ((type !== null) &&
-                (NonTextInputTypes.indexOf(type) !== -1) &&
-                (entry.allowIn & AllowIn.NonTextInput) === AllowIn.NonTextInput
-            ) return true;
-
-            return (entry.allowIn & AllowIn.Input) === AllowIn.Input;
+        if ((entry.exclude & Exclude.InputNonText) !== 0) {
+            if (e.tagName === "INPUT" && NonTextInputTypes.indexOf(e.type || '') !== -1) return false;
+        }
+        if ((entry.exclude & Exclude.TextArea) !== 0) {
+            if (e.tagName === "TEXTAREA") return false;
+        }
+        if ((entry.exclude & Exclude.ContentEditable) !== 0) {
+            if (e.srcElement.contentEditable === "true") return false;
         }
 
         return true;
@@ -109,9 +118,12 @@
             const key = ev.key;
             const code = ev.code;
             const keyName = convertToKeyName(ev);
-            const tagName = (ev.srcElement as HTMLElement).tagName;
-            const type = (ev.srcElement as HTMLElement).getAttribute('type');
-            const preventDefault1 = onKeyDown({ modKeys, keyName, tagName, type });
+
+            const srcElement = ev.srcElement as HTMLElement;
+            const tagName = srcElement.tagName;
+            const type = srcElement.getAttribute('type');
+
+            const preventDefault1 = onKeyDown({ modKeys, keyName, srcElement, tagName, type });
             const preventDefault2 = isWasm === true ? hotKeysWrpper.invokeMethod('OnKeyDown', modKeys, keyName, tagName, type, key, code) : false;
             if (preventDefault1 || preventDefault2) ev.preventDefault();
             if (isWasm === false) hotKeysWrpper.invokeMethodAsync('OnKeyDown', modKeys, keyName, tagName, type, key, code);
