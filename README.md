@@ -1,4 +1,4 @@
-# Blazor HotKeys [![NuGet Package](https://img.shields.io/nuget/v/Toolbelt.Blazor.HotKeys.svg)](https://www.nuget.org/packages/Toolbelt.Blazor.HotKeys/)
+﻿# Blazor HotKeys [![NuGet Package](https://img.shields.io/nuget/v/Toolbelt.Blazor.HotKeys.svg)](https://www.nuget.org/packages/Toolbelt.Blazor.HotKeys/)
 
 ## Summary
 
@@ -169,6 +169,31 @@ The complete source code (.razor) of this component is bellow.
   }
 }
 ```
+
+### 3. Appendix - How to enable / disable hotkeys depending on which element has focus
+
+You can specify enabling/disabling hotkeys depending on which element has focus when hotkeys registration via a combination of the `Exclude` flags that are optional 5th argument of the `HotKeysContext.Add()` method.
+
+By default, the `Exclude` flags argument is the following combination.
+
+```csharp
+Exclude.InputText | Exclude.InputNonText | Exclude.TextArea
+```
+
+This means, by default, hotkeys are disabled when the focus is in an `<input>` (with any `type`) or `<textarea>` element.
+
+If you want to enable hotkeys even when an `<input type="text"/>` is focused, you can do it as below.
+
+```csharp
+... this.HotKeys.CreateContext()
+  .Add(ModKeys.None, Keys.A, OnKeyDownA, "...", 
+    // 👇 Specify the 5th argument.
+    exclude: Exclude.InputNonText | Exclude.TextArea)
+  ...
+```
+
+And you can specify the `Exclude.ContentEditable` to register the unavailable hotkey when any "contenteditable" applied elements are focused.
+
 
 ## Limitations
 
