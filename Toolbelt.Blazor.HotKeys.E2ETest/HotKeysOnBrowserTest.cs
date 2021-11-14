@@ -194,4 +194,43 @@ public class HotKeysOnBrowserTest
         //(If the namespace were conflicted, it wouldn't work.)
         driver.FindElement(By.Id("saved-text-list")).Text.Is("\"" + text + "\"");
     }
+
+    [Test]
+    [TestCaseSource(typeof(HotKeysOnBrowserTest), nameof(AllHostingModels))]
+    public void ExcludeContentEditable_Test(HostingModel hostingModel)
+    {
+        var context = TestContext.Instance;
+        context.StartHost(hostingModel);
+
+        // Navigate to the "Test - Exclude Content Editable" page,
+        var driver = context.WebDriver;
+        driver.GoToUrlAndWait(context.GetHostUrl(hostingModel), "/test/exclude-contenteditable");
+
+        // Set focus to the "contenteditable" div element.
+        driver.FindElement(By.Id("editor-area")).Text.StartsWith("In this area,").IsTrue();
+        driver.FindElement(By.Id("editor-area")).Click();
+        Thread.Sleep(200);
+
+        // Enter the "H" key, but the hokey for "H" should not be worked,
+        // instead, the character "h" should be inserted into the contenteditable div area.
+        driver.SendKeys(Keys.Home + "h");
+        Thread.Sleep(200);
+        driver.Url_Should_Be("/test/exclude-contenteditable");
+        driver.FindElement(By.Id("editor-area")).Text.StartsWith("hIn this area,").IsTrue();
+
+        // But, enter the "C" key, then the hokey for "C" should be worked.(go to the "Counter" page.)
+        driver.SendKeys("c");
+        Thread.Sleep(200);
+        driver.Url_Should_Be("/counter");
+
+        // Reenter the test page, and enter the "F" key,
+        driver.GoToUrlAndWait(context.GetHostUrl(hostingModel), "/test/exclude-contenteditable");
+        driver.FindElement(By.Id("editor-area")).Click();
+        Thread.Sleep(200);
+        driver.SendKeys("f");
+        Thread.Sleep(200);
+
+        // ...then the hokey for "F" should be worked. (goto the "Fetch Data" page.)
+        driver.Url_Should_Be("/fetchdata");
+    }
 }
