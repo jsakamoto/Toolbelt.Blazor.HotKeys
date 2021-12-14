@@ -50,31 +50,7 @@ namespace Toolbelt.Blazor.HotKeys
             {
                 if (this._Attached) return this._JSInvoker;
 
-                var assembly = this.GetType().Assembly;
-                var version = assembly
-                    .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
-                    .InformationalVersion ?? assembly.GetName().Version.ToString();
-#if ENABLE_JSMODULE
-                if (!this._Options.DisableClientScriptAutoInjection)
-                {
-                    var scriptPath = $"./_content/Toolbelt.Blazor.HotKeys/script.module.min.js?v={version}";
-                    var jsModule = await this._JSRuntime.InvokeAsync<IJSObjectReference>("import", scriptPath);
-                    this._JSInvoker = new JSInvoker(this._JSRuntime, jsModule);
-                }
-                else
-                {
-                    this._JSInvoker = new JSInvoker(this._JSRuntime, null);
-                    try { await this._JSRuntime.InvokeVoidAsync("eval", "Toolbelt.Blazor.HotKeys.ready"); } catch { }
-                }
-#else
-                this._JSInvoker = new JSInvoker(this._JSRuntime);
-                if (!this._Options.DisableClientScriptAutoInjection)
-                {
-                    var scriptPath = "./_content/Toolbelt.Blazor.HotKeys/script.min.js";
-                    await this._JSRuntime.InvokeVoidAsync("eval", "new Promise(r=>((d,t,s,v)=>(h=>h.querySelector(t+`[src^=\"${s}\"]`)?r():(e=>(e.src=(s+v),e.onload=r,h.appendChild(e)))(d.createElement(t)))(d.head))(document,'script','" + scriptPath + "','?v=" + version + "'))");
-                }
-                try { await this._JSRuntime.InvokeVoidAsync("eval", "Toolbelt.Blazor.HotKeys.ready"); } catch { }
-#endif
+                await this.EnsureJSInvokerAsync();
                 await this._JSInvoker.InvokeAsync<object>("Toolbelt.Blazor.HotKeys.attach", DotNetObjectReference.Create(this), this.IsWasm);
 
                 this._Attached = true;
@@ -82,6 +58,65 @@ namespace Toolbelt.Blazor.HotKeys
             }
             finally { this.Syncer.Release(); }
         }
+
+        private string GetVersionText()
+        {
+            var assembly = this.GetType().Assembly;
+            return assembly
+                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
+                .InformationalVersion ?? assembly.GetName().Version.ToString();
+        }
+
+#if ENABLE_JSMODULE
+        private async ValueTask EnsureJSInvokerAsync()
+        {
+            if (!this._Options.DisableClientScriptAutoInjection)
+            {
+                var scriptPath = "./_content/Toolbelt.Blazor.HotKeys/script.module.min.js";
+
+                // Add version string for refresh token only navigator is online.
+                // (If the app runs on the offline mode, the module url with query parameters might cause the "resource not found" error.)
+                const string moduleScript = "export function isOnLine(){ return navigator.onLine; }";
+                await using var inlineJsModule = await this._JSRuntime.InvokeAsync<IJSObjectReference>("import", "data:text/javascript;charset=utf-8," + Uri.EscapeDataString(moduleScript));
+                var isOnLine = await inlineJsModule.InvokeAsync<bool>("isOnLine");
+
+                if (isOnLine) scriptPath += $"?v={this.GetVersionText()}";
+
+                var jsModule = await this._JSRuntime.InvokeAsync<IJSObjectReference>("import", scriptPath);
+                this._JSInvoker = new JSInvoker(this._JSRuntime, jsModule);
+            }
+            else
+            {
+                this._JSInvoker = new JSInvoker(this._JSRuntime, null);
+                try
+                {
+                    const string moduleScript = "export function ready(){ return Toolbelt.Blazor.HotKeys.ready; }";
+                    await using var inlineJsModule = await this._JSRuntime.InvokeAsync<IJSObjectReference>("import", "data:text/javascript;charset=utf-8," + Uri.EscapeDataString(moduleScript));
+
+                    await inlineJsModule.InvokeVoidAsync("ready");
+                }
+                catch { }
+            }
+        }
+#else
+        private async ValueTask EnsureJSInvokerAsync()
+        {
+            this._JSInvoker = new JSInvoker(this._JSRuntime);
+            if (!this._Options.DisableClientScriptAutoInjection)
+            {
+                var scriptPath = "./_content/Toolbelt.Blazor.HotKeys/script.min.js";
+
+                // Add version string for refresh token only navigator is online.
+                // (If the app runs on the offline mode, the module url with query parameters might cause the "resource not found" error.)
+                var jsInProcRuntime = this._JSRuntime as IJSInProcessRuntime;
+                var isOnLine = jsInProcRuntime?.Invoke<bool>("eval", "navigator.onLine") ?? false;
+                var versionQuery = isOnLine ? $"?v={this.GetVersionText()}" : "";
+
+                await this._JSRuntime.InvokeVoidAsync("eval", "new Promise(r=>((d,t,s,v)=>(h=>h.querySelector(t+`[src^=\"${s}\"]`)?r():(e=>(e.src=(s+v),e.onload=r,h.appendChild(e)))(d.createElement(t)))(d.head))(document,'script','" + scriptPath + "','" + versionQuery + "'))");
+            }
+            try { await this._JSRuntime.InvokeVoidAsync("eval", "Toolbelt.Blazor.HotKeys.ready"); } catch { }
+        }
+#endif
 
         /// <summary>
         /// Create hotkey entries context, and activate it.
