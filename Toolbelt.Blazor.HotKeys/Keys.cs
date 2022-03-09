@@ -114,7 +114,39 @@ namespace Toolbelt.Blazor.HotKeys
         AudioVolumeUp = 0xAF,
         MediaTrackNext = 0xB0,
         MediaTrackPrevious = 0xB1,
+        MediaStop = 0xB2,
         MediaPlayPause = 0xB3,
+        LaunchMail = 0xB4,
         LaunchMediaPlayer = 0xB5,
+
+        LaunchApplication1 = 0xB6,
+        LaunchApplication2 = 0xB7,
+
+        LaunchApplication3 = 0x1008FF42, // GDK_KEY_Launch2
+        LaunchApplication4 = 0x1008FF43, // GDK_KEY_Launch3
+        LaunchApplication5 = 0x1008FF44, // GDK_KEY_Launch4
+        LaunchApplication6 = 0x1008FF45, // GDK_KEY_Launch5
+        LaunchApplication7 = 0x1008FF46, // GDK_KEY_Launch6
+        LaunchApplication8 = 0x1008FF47, // GDK_KEY_Launch7
+        LaunchApplication9 = 0x1008FF48, // GDK_KEY_Launch8
+        LaunchApplication10 = 0x1008FF49,// GDK_KEY_Launch9
+        LaunchApplication11 = 0x1008FF4A,// GDK_KEY_LaunchA
+        LaunchApplication12 = 0x1008FF4B,// GDK_KEY_LaunchB
+        LaunchApplication13 = 0x1008FF4C,// GDK_KEY_LaunchC
+        LaunchApplication14 = 0x1008FF4D,// GDK_KEY_LaunchD
+        LaunchApplication15 = 0x1008FF4E,// GDK_KEY_LaunchE
+        LaunchApplication16 = 0x1008FF4F,// GDK_KEY_LaunchF
+
+        LaunchCalculator = 0x1008FF1D, // GDK_KEY_Calculator
+        LaunchCalendar = 0x1008FF20, // GDK_KEY_Calendar
+        LaunchContacts = 0x80CF, // Android: KEYCODE_CONTACTS (207)
+        LaunchMusicPlayer = 0x1008FF92, // GDK_KEY_Music
+        LaunchMyComputer = 0x1008FF33, // GDK_KEY_MyComputer
+        LaunchPhone = 0x1008FF6E, // GDK_KEY_Phone
+        LaunchScreenSaver = 0x1008FF2D, // GDK_KEY_ScreenSaver
+        LaunchSpreadsheet = 0x1008FF5C,// GDK_KEY_Excel
+        LaunchWebBrowser = 0x1008FF2E,// GDK_KEY_WWW
+        LaunchWebCam = 0x1008FF8F, // GDK_KEY_WebCam
+        LaunchWordProcessor = 0x1008FF89 // GDK_KEY_Word
     }
 }
