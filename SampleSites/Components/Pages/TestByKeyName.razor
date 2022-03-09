@@ -4,7 +4,7 @@
 
 <h1>Test by Key Name</h1>
 
-<p>This page captures media keys (next/prev/pause) by key name string.</p>
+<p>This page captures media keys (next/prev/stop/pause) by key name string.</p>
 
 <EnteredKeyList @ref="EnteredKeyList" />
 
@@ -18,7 +18,8 @@
         this.HotKeysContext = this.HotKeys.CreateContext()
             .Add(ModKeys.None, "MediaTrackNext", OnHotKey)
             .Add(ModKeys.None, "MediaTrackPrevious", OnHotKey)
-            .Add(ModKeys.None, "MediaPlayPause", OnHotKey);
+            .Add(ModKeys.None, "MediaPlayPause", OnHotKey)
+            .Add(ModKeys.None, "MediaStop", OnHotKey);
     }
 
     private void OnHotKey(HotKeyEntry hotKeyEntry)
