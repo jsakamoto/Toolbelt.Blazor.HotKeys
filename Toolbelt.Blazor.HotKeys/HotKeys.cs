@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
+using System;
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.JSInterop;
 
 namespace Toolbelt.Blazor.HotKeys
 {
@@ -18,6 +19,8 @@ namespace Toolbelt.Blazor.HotKeys
         private readonly IJSRuntime _JSRuntime;
 
         private readonly HotKeysOptions _Options;
+
+        private readonly ILogger<HotKeys> _Logger;
 
         private JSInvoker _JSInvoker = null;
 
@@ -33,10 +36,11 @@ namespace Toolbelt.Blazor.HotKeys
         /// <summary>
         /// Initialize a new instance of the HotKeys class.
         /// </summary>
-        internal HotKeys(IJSRuntime jSRuntime, HotKeysOptions options)
+        internal HotKeys(IJSRuntime jSRuntime, HotKeysOptions options, ILogger<HotKeys> logger)
         {
             this._JSRuntime = jSRuntime;
             this._Options = options;
+            this._Logger = logger;
         }
 
         /// <summary>
@@ -149,7 +153,9 @@ namespace Toolbelt.Blazor.HotKeys
 
         public async ValueTask DisposeAsync()
         {
-            if (this._JSInvoker != null) await this._JSInvoker.DisposeAsync();
+            try { if (this._JSInvoker != null) await this._JSInvoker.DisposeAsync(); }
+            catch (Exception ex) when (ex.GetType().FullName == "Microsoft.JSInterop.JSDisconnectedException") { }
+            catch (Exception ex) { this._Logger.LogError(ex, ex.Message); }
         }
     }
 }

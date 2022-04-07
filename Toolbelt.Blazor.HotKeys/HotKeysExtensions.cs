@@ -1,6 +1,7 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
+using System;
 using Toolbelt.Blazor.HotKeys;
 
 namespace Toolbelt.Blazor.Extensions.DependencyInjection
@@ -16,7 +17,7 @@ namespace Toolbelt.Blazor.Extensions.DependencyInjection
         /// <param name="services">The Microsoft.Extensions.DependencyInjection.IServiceCollection to add the service to.</param>
         public static IServiceCollection AddHotKeys(this IServiceCollection services)
         {
-            return services.AddHotKeys(configure:null);
+            return services.AddHotKeys(configure: null);
         }
 
         /// <summary>
@@ -30,8 +31,9 @@ namespace Toolbelt.Blazor.Extensions.DependencyInjection
             {
                 var options = new HotKeysOptions();
                 configure?.Invoke(options);
-                var jsRuntime = serviceProvider.GetService<IJSRuntime>();
-                return new global::Toolbelt.Blazor.HotKeys.HotKeys(jsRuntime, options);
+                var jsRuntime = serviceProvider.GetRequiredService<IJSRuntime>();
+                var logger = serviceProvider.GetRequiredService<ILogger<global::Toolbelt.Blazor.HotKeys.HotKeys>>();
+                return new global::Toolbelt.Blazor.HotKeys.HotKeys(jsRuntime, options, logger);
             });
         }
     }
