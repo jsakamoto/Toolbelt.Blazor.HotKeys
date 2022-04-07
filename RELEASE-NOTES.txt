@@ -1,3 +1,6 @@
+v.12.1.1
+- Fix: HotKey service was not disposed correctly when the client connection was closed on Blazor Server apps.
+
 v.12.1.0
 - Improve: add support for the "MediaStop" key and numerous "LaunchApplication" keys.
 
