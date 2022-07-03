@@ -5,8 +5,9 @@ export var Toolbelt;
         var HotKeys;
         (function (HotKeys) {
             class HotkeyEntry {
-                constructor(hotKeyEntryWrpper, modKeys, keyName, exclude) {
+                constructor(hotKeyEntryWrpper, mode, modKeys, keyName, exclude) {
                     this.hotKeyEntryWrpper = hotKeyEntryWrpper;
+                    this.mode = mode;
                     this.modKeys = modKeys;
                     this.keyName = keyName;
                     this.exclude = exclude;
@@ -30,9 +31,9 @@ export var Toolbelt;
                 "BackQuart": "BackQuote",
                 "SingleQuart": "SingleQuote",
             };
-            function register(hotKeyEntryWrpper, modKeys, keyName, exclude) {
+            function register(hotKeyEntryWrpper, mode, modKeys, keyName, exclude) {
                 const id = idSeq++;
-                const hotKeyEntry = new HotkeyEntry(hotKeyEntryWrpper, modKeys, fixingKeyNameTypoMap[keyName] || keyName, exclude);
+                const hotKeyEntry = new HotkeyEntry(hotKeyEntryWrpper, mode, modKeys, fixingKeyNameTypoMap[keyName] || keyName, exclude);
                 hotKeyEntries[id] = hotKeyEntry;
                 return id;
             }
@@ -41,24 +42,27 @@ export var Toolbelt;
                 delete hotKeyEntries[id];
             }
             HotKeys.unregister = unregister;
-            function onKeyDown(e) {
+            function onKeyDown(event) {
                 let preventDefault = false;
                 for (const key in hotKeyEntries) {
                     if (!hotKeyEntries.hasOwnProperty(key))
                         continue;
                     const entry = hotKeyEntries[key];
-                    if (entry.keyName.toLocaleLowerCase() !== e.keyName.toLocaleLowerCase())
+                    const isDefaultMode = entry.mode === 0;
+                    const eventKeyName = isDefaultMode ? event.keyName : event.nativeKey;
+                    if (entry.keyName.localeCompare(eventKeyName, 'en', { sensitivity: 'base' }) !== 0)
                         continue;
-                    let modKeys = entry.modKeys;
-                    if (entry.keyName === 'Shift')
-                        modKeys |= 1;
+                    const eventModkeys = isDefaultMode ? event.modKeys : (event.modKeys & (0xffff ^ 1));
+                    let entryModKeys = isDefaultMode ? entry.modKeys : (entry.modKeys & (0xffff ^ 1));
+                    if (entry.keyName === 'Shift' && isDefaultMode)
+                        entryModKeys |= 1;
                     if (entry.keyName === 'Ctrl')
-                        modKeys |= 2;
+                        entryModKeys |= 2;
                     if (entry.keyName === 'Alt')
-                        modKeys |= 4;
-                    if (e.modKeys !== modKeys)
+                        entryModKeys |= 4;
+                    if (eventModkeys !== entryModKeys)
                         continue;
-                    if (!isAllowedIn(entry, e))
+                    if (!isAllowedIn(entry, event))
                         continue;
                     preventDefault = true;
                     entry.action();
@@ -98,7 +102,7 @@ export var Toolbelt;
                     const srcElement = ev.srcElement;
                     const tagName = srcElement.tagName;
                     const type = srcElement.getAttribute('type');
-                    const preventDefault1 = onKeyDown({ modKeys, keyName, srcElement, tagName, type });
+                    const preventDefault1 = onKeyDown({ modKeys, keyName, nativeKey: key, srcElement, tagName, type });
                     const preventDefault2 = isWasm === true ? hotKeysWrpper.invokeMethod('OnKeyDown', modKeys, keyName, tagName, type, key, code) : false;
                     if (preventDefault1 || preventDefault2)
                         ev.preventDefault();
