@@ -1,12 +1,23 @@
-﻿.hot-keys-cheat-sheet .key {
+﻿.hot-keys-cheat-sheet p {
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.hot-keys-cheat-sheet ul {
+    margin: 0;
+}
+
+.hot-keys-cheat-sheet .key {
     border: solid 1px #fff;
     border-radius: 4px;
+    font-size: 12px;
     width: 28px;
     display: inline-block;
     text-align: center;
     height: 28px;
     line-height: 28px;
-    margin-top: 7px;
+    margin: 4px;
     color: #fff;
     background-color: #888;
 }

@@ -11,8 +11,8 @@ public static class WebDriverExtensions
     public static void GoToUrlAndWait(this IWebDriver driver, string url, string path = "")
     {
         driver.Navigate().GoToUrl(url.TrimEnd('/') + "/" + path.TrimStart('/'));
-        driver.Wait(5000).Until(_ => driver.FindElement(By.CssSelector("a.navbar-brand")));
-        driver.Wait(5000).Until(_ => driver.FindElements(By.CssSelector(".loading")).Count == 0);
+        driver.Wait(30000).Until(_ => driver.FindElement(By.CssSelector("a.navbar-brand")));
+        driver.Wait(30000).Until(_ => driver.FindElements(By.CssSelector(".loading")).Count == 0);
         Thread.Sleep(200);
     }
 

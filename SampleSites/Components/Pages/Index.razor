@@ -1,7 +1,33 @@
 ﻿@page "/"
+@implements IDisposable
+@inject HotKeys HotKeys
 
-<h1>Hello, world!</h1>
+<h1>@Greeting</h1>
 
 Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
+
+@code {
+    private string Greeting = "Hello, world!";
+
+    private HotKeysContext HotKeysContext;
+
+    protected override void OnInitialized()
+    {
+        this.HotKeysContext = this.HotKeys.CreateContext()
+            .Add(ModKeys.None, Keys.G, OnHotKey)
+        .AddByKey(ModKeys.None, "@", OnHotKey);
+    }
+
+    private void OnHotKey(HotKeyEntry hotKeyEntry)
+    {
+        this.Greeting = "Hi, there!";
+        this.StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        this.HotKeysContext?.Dispose();
+    }
+}
