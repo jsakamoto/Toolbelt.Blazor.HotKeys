@@ -9,7 +9,11 @@ Welcome to your new app.
 <SurveyPrompt Title="How is Blazor working for you?" />
 
 @code {
-    private string Greeting = "Hello, world!";
+    private const string GreetingA = "Hello, world!";
+    private const string GreetingB = "Hi, there!";
+    private const string GreetingC = "How's it going?";
+
+    private string Greeting = GreetingA;
 
     private HotKeysContext HotKeysContext;
 
@@ -22,7 +26,10 @@ Welcome to your new app.
 
     private void OnHotKey(HotKeyEntry hotKeyEntry)
     {
-        this.Greeting = "Hi, there!";
+        this.Greeting =
+            this.Greeting == GreetingA ? GreetingB :
+            this.Greeting == GreetingB ? GreetingC :
+            GreetingA;
         this.StateHasChanged();
     }
 

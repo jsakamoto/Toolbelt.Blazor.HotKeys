@@ -1,5 +1,5 @@
-﻿using System.Diagnostics;
-using System.Text;
+﻿using Toolbelt.Diagnostics;
+using static Toolbelt.Diagnostics.XProcess;
 
 namespace Toolbelt.Blazor.HotKeys.E2ETest;
 
@@ -7,78 +7,49 @@ public class SampleSite
 {
     private readonly int ListenPort;
 
-    private readonly string ProjectName;
+    private readonly string ProjectSubFolder;
+
     private readonly string? TargetFramework;
-    private Process? dotnetCLI;
 
-    private readonly ManualResetEventSlim ListeningWaiter = new ManualResetEventSlim(initialState: false);
+    private XProcess? dotnetCLI;
 
-    public SampleSite(int listenPort, string projectName, string? targetFramework = null)
+    public SampleSite(int listenPort, string projectSubFolder, string? targetFramework = null)
     {
         this.ListenPort = listenPort;
-        this.ProjectName = projectName;
+        this.ProjectSubFolder = projectSubFolder;
         this.TargetFramework = targetFramework;
     }
 
     public string GetUrl() => $"http://localhost:{this.ListenPort}";
 
-    public void Start()
+    internal string GetUrl(string subPath) => this.GetUrl() + "/" + subPath.TrimStart('/');
+
+    public async ValueTask<SampleSite> StartAsync()
     {
-        if (this.dotnetCLI != null) return;
+        if (this.dotnetCLI != null) return this;
 
-        var workDir = AppDomain.CurrentDomain.BaseDirectory;
-        while (workDir != null && !Directory.GetDirectories(workDir, "SampleSites").Any())
-            workDir = Path.GetDirectoryName(workDir);
+        var solutionDir = FileIO.FindContainerDirToAncestor("*.sln");
+        var sampleSiteDir = Path.Combine(solutionDir, "SampleSites");
+        var projDir = Path.Combine(sampleSiteDir, this.ProjectSubFolder);
 
-        var projectNameParts = this.ProjectName.Split('/');
-        var projectFolder = projectNameParts[0];
-        var projectName = projectNameParts.Length > 1 ? projectNameParts[1] : "";
-        workDir = Path.Combine(workDir ?? ".", "SampleSites", projectFolder);
+        var frameworkOption = string.IsNullOrEmpty(this.TargetFramework) ? "" : "-f " + this.TargetFramework;
+        this.dotnetCLI = Start("dotnet", $"run --urls {this.GetUrl()} {frameworkOption}", projDir);
 
-        var args = new StringBuilder();
-        args.Append($"run --urls {this.GetUrl()}");
-        if (this.TargetFramework != null) args.Append($" -f {this.TargetFramework}");
-        if (!string.IsNullOrEmpty(projectName)) args.Append($" -p {projectName}.csproj");
-
-        this.dotnetCLI = new Process
+        var success = await this.dotnetCLI.WaitForOutputAsync(output => output.Contains(this.GetUrl()), millsecondsTimeout: 15000);
+        if (!success)
         {
-            EnableRaisingEvents = true,
-            StartInfo = new ProcessStartInfo
-            {
-                FileName = "dotnet",
-                Arguments = args.ToString(),
-                UseShellExecute = false,
-                CreateNoWindow = true,
-                ErrorDialog = false,
-                RedirectStandardError = true,
-                RedirectStandardOutput = true,
-                WorkingDirectory = workDir
-            },
-        };
-        this.dotnetCLI.OutputDataReceived += this.Process_OutputDataReceived;
+            try { this.dotnetCLI.Dispose(); } catch { }
+            var output = this.dotnetCLI.Output;
+            this.dotnetCLI = null;
+            throw new TimeoutException($"\"dotnet run\" did not respond \"Now listening on: {this.GetUrl()}\".\r\n" + output);
+        }
 
-        this.dotnetCLI.Start();
-        this.dotnetCLI.BeginOutputReadLine();
-        this.dotnetCLI.BeginErrorReadLine();
-
-        var timedOut = !this.ListeningWaiter.Wait(millisecondsTimeout: 10000);
-        if (timedOut) throw new TimeoutException("\"dotnet run\" did not respond \"Now listening on: http://\".");
         Thread.Sleep(200);
-    }
-
-    private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
-    {
-        if (e.Data?.Contains("Now listening on: http://") == true) this.ListeningWaiter.Set();
+        return this;
     }
 
     public void Stop()
     {
-        if (this.dotnetCLI != null)
-        {
-            //dotnetCLI.OutputDataReceived -= Process_OutputDataReceived;
-            if (!this.dotnetCLI.HasExited) this.dotnetCLI.Kill();
-            this.dotnetCLI.Dispose();
-        }
-        this.ListeningWaiter.Dispose();
+        this.dotnetCLI?.Dispose();
     }
 }
