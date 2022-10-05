@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
+using Toolbelt.Blazor.HotKeys.Internals;
 using static System.ComponentModel.EditorBrowsableState;
 
 namespace Toolbelt.Blazor.HotKeys
@@ -18,12 +19,12 @@ namespace Toolbelt.Blazor.HotKeys
         public ModKeys ModKeys { get; }
 
         /// <summary>
-        /// Get the identifier of hotkey.
+        /// Get the identifier of hotkey.<br/>If this property return 0, it means the HotKey entry works based on DOM event's native key name.
         /// </summary>
         public Keys Key { get; }
 
         /// <summary>
-        /// Get the name if the identifier of hotkey.
+        /// Get the name of the identifier of hotkey.
         /// <para>The "key name" is a bit different from the "key" and "code" properties of the DOM event object.<br/> The "key name" comes from "key" and "code", but it is tried to converting to one of the Keys enum values names.<br/>if the keyboard event is not covered by Keys enum values, the "key name" will be the value of "code" or "key".</para>
         /// </summary>
         public string KeyName { get; }
@@ -32,12 +33,6 @@ namespace Toolbelt.Blazor.HotKeys
         /// Get the description of the meaning of this hot key entry.
         /// </summary>
         public string Description { get; }
-
-        /// <summary>
-        /// Get the combination of HTML element flags that will be allowed hotkey works.
-        /// </summary>
-        [Obsolete("Reference the \"Exclude\" property instead."), EditorBrowsable(Never)]
-        public AllowIn AllowIn => ExcludeToAllowIn(this.Exclude);
 
         /// <summary>
         /// Get the combination of HTML element flags that will be not allowed hotkey works.
@@ -49,33 +44,11 @@ namespace Toolbelt.Blazor.HotKeys
         /// </summary>
         public Func<HotKeyEntry, Task> Action { get; }
 
+        internal HotKeyMode Mode => this.Key != 0 ? HotKeyMode.Default : HotKeyMode.NativeKey;
+
         internal int Id = -1;
 
         internal DotNetObjectReference<HotKeyEntry>? ObjectReference;
-
-#pragma warning disable CS0618 // Type or member is obsolete
-        private static AllowIn ExcludeToAllowIn(Exclude exclude)
-        {
-            var allowIn =
-                (exclude.HasFlag(Exclude.InputText) && exclude.HasFlag(Exclude.InputNonText)) ? AllowIn.None :
-                (!exclude.HasFlag(Exclude.InputText) && exclude.HasFlag(Exclude.InputNonText)) ? AllowIn.Input :
-                (exclude.HasFlag(Exclude.InputText) && !exclude.HasFlag(Exclude.InputNonText)) ? AllowIn.NonTextInput :
-                (!exclude.HasFlag(Exclude.InputText) && !exclude.HasFlag(Exclude.InputNonText)) ? AllowIn.Input :
-                AllowIn.None;
-
-            return allowIn | (exclude.HasFlag(Exclude.TextArea) ? AllowIn.None : AllowIn.TextArea);
-        }
-
-        private static Exclude AllowInToExclude(AllowIn allowIn)
-        {
-            var exclude =
-                (!allowIn.HasFlag(AllowIn.Input) && !allowIn.HasFlag(AllowIn.NonTextInput)) ? Exclude.InputText | Exclude.InputNonText :
-                (!allowIn.HasFlag(AllowIn.Input) && allowIn.HasFlag(AllowIn.NonTextInput)) ? Exclude.InputText :
-                Exclude.None;
-
-            return exclude | (allowIn.HasFlag(AllowIn.TextArea) ? Exclude.None : Exclude.TextArea);
-        }
-#pragma warning restore CS0618 // Type or member is obsolete
 
         /// <summary>
         /// Initialize a new instance of the HotKeyEntry class.
@@ -90,6 +63,24 @@ namespace Toolbelt.Blazor.HotKeys
             this.ModKeys = modKeys;
             this.Key = key;
             this.KeyName = key.ToString();
+            this.Exclude = exclude;
+            this.Description = description;
+            this.Action = action;
+        }
+
+        /// <summary>
+        /// Initialize a new instance of the HotKeyEntry class.
+        /// </summary>
+        /// <param name="modKeys">The combination of modifier keys flags. [NOTICE] <see cref="ModKeys.Shift"/> is ignored.</param>
+        /// <param name="keyName">The DOM event's native key name of hotkey.</param>
+        /// <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
+        /// <param name="description">The description of the meaning of this hot key entry.</param>
+        /// <param name="exclude">The combination of HTML element flags that will be not allowed hotkey works.</param>
+        public HotKeyEntry(ModKeys modKeys, string keyName, Exclude exclude, string description, Func<HotKeyEntry, Task> action)
+        {
+            this.ModKeys = modKeys;
+            this.Key = 0;
+            this.KeyName = keyName;
             this.Exclude = exclude;
             this.Description = description;
             this.Action = action;

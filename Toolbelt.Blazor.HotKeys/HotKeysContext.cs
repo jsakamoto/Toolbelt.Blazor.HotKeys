@@ -69,11 +69,7 @@ namespace Toolbelt.Blazor.HotKeys
         /// <returns>This context.</returns>
         public HotKeysContext Add(ModKeys modKeys, Keys key, Action<HotKeyEntry> action, string description = "", Exclude exclude = Exclude.Default)
         {
-            this.Keys.Add(this.Register(new HotKeyEntry(modKeys, key, exclude, description, args =>
-            {
-                action(args);
-                return Task.CompletedTask;
-            })));
+            this.Keys.Add(this.Register(new HotKeyEntry(modKeys, key, exclude, description, e => { action(e); return Task.CompletedTask; })));
             return this;
         }
 
@@ -157,6 +153,66 @@ namespace Toolbelt.Blazor.HotKeys
             return this.Add(modKeys, key, action, description, exclude);
         }
 
+        /// <summary>
+        /// Add a new hotkey based on DOM event's native key name entry to this context.
+        /// </summary>
+        /// <param name="modKeys">The combination of modifier keys flags.[NOTICE] <see cref="ModKeys.Shift"/> is ignored.</param>
+        /// <param name="nativeKey">The DOM event's native key name of hotkey.</param>
+        /// <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
+        /// <param name="description">The description of the meaning of this hot key entry.</param>
+        /// <param name="exclude">The combination of HTML element flags that will be not allowed hotkey works.</param>
+        /// <returns>This context.</returns>
+        public HotKeysContext AddByKey(ModKeys modKeys, string nativeKey, Func<HotKeyEntry, Task> action, string description = "", Exclude exclude = Exclude.Default)
+        {
+            this.Keys.Add(this.Register(new HotKeyEntry(modKeys, nativeKey, exclude, description, action)));
+            return this;
+        }
+
+        /// <summary>
+        /// Add a new hotkey based on DOM event's native key name entry to this context.
+        /// </summary>
+        /// <param name="modKeys">The combination of modifier keys flags.[NOTICE] <see cref="ModKeys.Shift"/> is ignored.</param>
+        /// <param name="nativeKey">The DOM event's native key name of hotkey.</param>
+        /// <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
+        /// <param name="description">The description of the meaning of this hot key entry.</param>
+        /// <param name="exclude">The combination of HTML element flags that will be not allowed hotkey works.</param>
+        /// <returns>This context.</returns>
+        public HotKeysContext AddByKey(ModKeys modKeys, string nativeKey, Func<Task> action, string description = "", Exclude exclude = Exclude.Default)
+        {
+            this.Keys.Add(this.Register(new HotKeyEntry(modKeys, nativeKey, exclude, description, _ => action())));
+            return this;
+        }
+
+        /// <summary>
+        /// Add a new hotkey based on DOM event's native key name entry to this context.
+        /// </summary>
+        /// <param name="modKeys">The combination of modifier keys flags.[NOTICE] <see cref="ModKeys.Shift"/> is ignored.</param>
+        /// <param name="nativeKey">The DOM event's native key name of hotkey.</param>
+        /// <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
+        /// <param name="description">The description of the meaning of this hot key entry.</param>
+        /// <param name="exclude">The combination of HTML element flags that will be not allowed hotkey works.</param>
+        /// <returns>This context.</returns>
+        public HotKeysContext AddByKey(ModKeys modKeys, string nativeKey, Action<HotKeyEntry> action, string description = "", Exclude exclude = Exclude.Default)
+        {
+            this.Keys.Add(this.Register(new HotKeyEntry(modKeys, nativeKey, exclude, description, e => { action(e); return Task.CompletedTask; })));
+            return this;
+        }
+
+        /// <summary>
+        /// Add a new hotkey based on DOM event's native key name entry to this context.
+        /// </summary>
+        /// <param name="modKeys">The combination of modifier keys flags.[NOTICE] <see cref="ModKeys.Shift"/> is ignored.</param>
+        /// <param name="nativeKey">The DOM event's native key name of hotkey.</param>
+        /// <param name="action">The callback action that will be invoked when user enter modKeys + key combination on the browser.</param>
+        /// <param name="description">The description of the meaning of this hot key entry.</param>
+        /// <param name="exclude">The combination of HTML element flags that will be not allowed hotkey works.</param>
+        /// <returns>This context.</returns>
+        public HotKeysContext AddByKey(ModKeys modKeys, string nativeKey, Action action, string description = "", Exclude exclude = Exclude.Default)
+        {
+            this.Keys.Add(this.Register(new HotKeyEntry(modKeys, nativeKey, exclude, description, _ => { action(); return Task.CompletedTask; })));
+            return this;
+        }
+
         private HotKeyEntry Register(HotKeyEntry hotKeyEntry)
         {
             hotKeyEntry.ObjectReference = DotNetObjectReference.Create(hotKeyEntry);
@@ -166,7 +222,7 @@ namespace Toolbelt.Blazor.HotKeys
                 {
                     return t.Result.InvokeAsync<int>(
                         "Toolbelt.Blazor.HotKeys.register",
-                        hotKeyEntry.ObjectReference, hotKeyEntry.ModKeys, hotKeyEntry.KeyName, hotKeyEntry.Exclude).AsTask();
+                        hotKeyEntry.ObjectReference, hotKeyEntry.Mode, hotKeyEntry.ModKeys, hotKeyEntry.KeyName, hotKeyEntry.Exclude).AsTask();
                 }
                 else
                 {
