@@ -8,6 +8,12 @@ Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
 
+<p>
+    <button class="btn btn-secondary" @onclick="OnClickRemoveHotKey">
+        Remove the hot key "G"
+    </button>
+</p>
+
 @code {
     private const string GreetingA = "Hello, world!";
     private const string GreetingB = "Hi, there!";
@@ -21,7 +27,7 @@ Welcome to your new app.
     {
         this.HotKeysContext = this.HotKeys.CreateContext()
             .Add(ModKeys.None, Keys.G, OnHotKey)
-        .AddByKey(ModKeys.None, "@", OnHotKey);
+            .AddByKey(ModKeys.None, "@", OnHotKey);
     }
 
     private void OnHotKey(HotKeyEntry hotKeyEntry)
@@ -31,6 +37,11 @@ Welcome to your new app.
             this.Greeting == GreetingB ? GreetingC :
             GreetingA;
         this.StateHasChanged();
+    }
+
+    private void OnClickRemoveHotKey()
+    {
+        this.HotKeysContext.Remove(ModKeys.None, Keys.G);
     }
 
     public void Dispose()
