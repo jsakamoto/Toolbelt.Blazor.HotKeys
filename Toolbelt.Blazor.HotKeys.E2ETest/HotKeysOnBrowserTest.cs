@@ -277,7 +277,7 @@ public class HotKeysOnBrowserTest
         var context = TestContext.Instance;
         await context.StartHostAsync(hostingModel);
 
-        // Navigate to the "Homee" page,
+        // Navigate to the "Home" page,
         var page = await context.GetPageAsync();
         await page.GotoAndWaitForReadyAsync(context.GetHostUrl(hostingModel));
 
@@ -300,5 +300,36 @@ public class HotKeysOnBrowserTest
             options = new { key = "@", code = "BlaceLeft", keyCode = 0xc0, shiftKey = false }
         });
         await page.WaitForAsync(async _ => (await h1.TextContentAsync()) == "How's it going?");
+    }
+
+    [Test]
+    [TestCaseSource(typeof(HotKeysOnBrowserTest), nameof(AllHostingModels))]
+    public async Task Remove_Test(HostingModel hostingModel)
+    {
+        var context = TestContext.Instance;
+        await context.StartHostAsync(hostingModel);
+
+        // Navigate to the "Home" page,
+        var page = await context.GetPageAsync();
+        await page.GotoAndWaitForReadyAsync(context.GetHostUrl(hostingModel));
+
+        var h1 = page.Locator("h1");
+        var h1TextBefore = await h1.TextContentAsync();
+        h1TextBefore.Is("Hello, world!");
+
+        // Verify the hot key "G" works correctly at this time. (Emulate to press the "G" key.)
+        await page.Keyboard.DownAsync("g");
+        await page.Keyboard.UpAsync("g");
+        await page.WaitForAsync(async _ => (await h1.TextContentAsync()) == "Hi, there!");
+
+        // But after the hot key was removed...
+        await page.ClickAsync("text=Remove the hot key \"G\"");
+        await Task.Delay(200);
+
+        // The hot key "G" is no longer working.
+        await page.Keyboard.DownAsync("g");
+        await page.Keyboard.UpAsync("g");
+        await Task.Delay(500);
+        await page.WaitForAsync(async _ => (await h1.TextContentAsync()) == "Hi, there!");
     }
 }
