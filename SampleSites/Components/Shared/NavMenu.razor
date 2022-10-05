@@ -14,49 +14,49 @@
     <ul class="nav flex-column">
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
+                <span class="material-icons" aria-hidden="true">home</span> Home
             </NavLink>
         </li>
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
+                <span class="material-icons" aria-hidden="true">add_circle_outline</span> Counter
             </NavLink>
         </li>
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
+                <span class="material-icons" aria-hidden="true">view_list</span> Fetch data
             </NavLink>
         </li>
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="save-text">
-                <span class="oi oi-data-transfer-download" aria-hidden="true"></span> Save text
+                <span class="material-icons" aria-hidden="true">download</span> Save text
             </NavLink>
         </li>
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="test/bykeys">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Test All Keys
+                <span class="material-icons" aria-hidden="true">keyboard</span> Test All Keys
             </NavLink>
         </li>
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="test/bykeyname">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Test by Key Name
+                <span class="material-icons" aria-hidden="true">keyboard</span> Test by Key Name
             </NavLink>
         </li>
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="test/onkeydown">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Test OnKeyDown
+                <span class="material-icons" aria-hidden="true">keyboard</span> Test OnKeyDown
             </NavLink>
         </li>
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="test/exclude-contenteditable">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Test Exclude Content Editable
+                <span class="material-icons md-36" aria-hidden="true">keyboard</span> Test Exclude Content Editable
             </NavLink>
         </li>
         @if (@RuntimeInformation.ProcessArchitecture.ToString() == "Wasm")
         {
             <li class="nav-item px-3">
                 <NavLink class="nav-link" href="test/barcodescanneraltmode">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> Barcode alt mode
+                    <span class="material-icons" aria-hidden="true">keyboard</span> Barcode alt mode
                 </NavLink>
             </li>
         }

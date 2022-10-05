@@ -8,6 +8,36 @@ namespace Toolbelt.Blazor.HotKeys
     public partial class HotKeyEntry
     {
         /// <summary>
+        /// Get the combination of HTML element flags that will be allowed hotkey works.
+        /// </summary>
+        [Obsolete("Reference the \"Exclude\" property instead."), EditorBrowsable(Never)]
+        public AllowIn AllowIn => ExcludeToAllowIn(this.Exclude);
+
+        [Obsolete]
+        private static AllowIn ExcludeToAllowIn(Exclude exclude)
+        {
+            var allowIn =
+                (exclude.HasFlag(Exclude.InputText) && exclude.HasFlag(Exclude.InputNonText)) ? AllowIn.None :
+                (!exclude.HasFlag(Exclude.InputText) && exclude.HasFlag(Exclude.InputNonText)) ? AllowIn.Input :
+                (exclude.HasFlag(Exclude.InputText) && !exclude.HasFlag(Exclude.InputNonText)) ? AllowIn.NonTextInput :
+                (!exclude.HasFlag(Exclude.InputText) && !exclude.HasFlag(Exclude.InputNonText)) ? AllowIn.Input :
+                AllowIn.None;
+
+            return allowIn | (exclude.HasFlag(Exclude.TextArea) ? AllowIn.None : AllowIn.TextArea);
+        }
+
+        [Obsolete]
+        private static Exclude AllowInToExclude(AllowIn allowIn)
+        {
+            var exclude =
+                (!allowIn.HasFlag(AllowIn.Input) && !allowIn.HasFlag(AllowIn.NonTextInput)) ? Exclude.InputText | Exclude.InputNonText :
+                (!allowIn.HasFlag(AllowIn.Input) && allowIn.HasFlag(AllowIn.NonTextInput)) ? Exclude.InputText :
+                Exclude.None;
+
+            return exclude | (allowIn.HasFlag(AllowIn.TextArea) ? Exclude.None : Exclude.TextArea);
+        }
+
+        /// <summary>
         /// Initialize a new instance of the HotKeyEntry class.
         /// </summary>
         /// <param name="modKeys">The combination of modifier keys flags.</param>

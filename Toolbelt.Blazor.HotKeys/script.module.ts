@@ -22,11 +22,17 @@
         Alt = 0x12,
     }
 
+    const enum HotKeyMode {
+        Default,
+        NativeKey
+    }
+
     class HotkeyEntry {
         public selector: string;
 
         constructor(
             private hotKeyEntryWrpper: any,
+            public mode: HotKeyMode,
             public modKeys: ModKeys,
             public keyName: string,
             public exclude: Exclude
@@ -53,9 +59,9 @@
         "SingleQuart": "SingleQuote",
     };
 
-    export function register(hotKeyEntryWrpper: any, modKeys: ModKeys, keyName: string, exclude: Exclude): number {
+    export function register(hotKeyEntryWrpper: any, mode: HotKeyMode, modKeys: ModKeys, keyName: string, exclude: Exclude): number {
         const id = idSeq++;
-        const hotKeyEntry = new HotkeyEntry(hotKeyEntryWrpper, modKeys, fixingKeyNameTypoMap[keyName] || keyName, exclude);
+        const hotKeyEntry = new HotkeyEntry(hotKeyEntryWrpper, mode, modKeys, fixingKeyNameTypoMap[keyName] || keyName, exclude);
         hotKeyEntries[id] = hotKeyEntry;
         return id;
     }
@@ -64,22 +70,25 @@
         delete hotKeyEntries[id];
     }
 
-    function onKeyDown(e: { modKeys: ModKeys, keyName: string, srcElement: HTMLElement, tagName: string, type: string | null }): boolean {
+    function onKeyDown(event: { modKeys: ModKeys, keyName: string, nativeKey: string, srcElement: HTMLElement, tagName: string, type: string | null }): boolean {
         let preventDefault = false;
 
         for (const key in hotKeyEntries) {
             if (!hotKeyEntries.hasOwnProperty(key)) continue;
             const entry = hotKeyEntries[key];
+            const isDefaultMode = entry.mode === HotKeyMode.Default;
 
-            if (entry.keyName.toLocaleLowerCase() !== e.keyName.toLocaleLowerCase()) continue;
+            const eventKeyName = isDefaultMode ? event.keyName : event.nativeKey;
+            if (entry.keyName.localeCompare(eventKeyName, 'en', { sensitivity: 'base' }) !== 0) continue;
 
-            let modKeys = entry.modKeys;
-            if (entry.keyName === 'Shift') modKeys |= ModKeys.Shift;
-            if (entry.keyName === 'Ctrl') modKeys |= ModKeys.Ctrl;
-            if (entry.keyName === 'Alt') modKeys |= ModKeys.Alt;
-            if (e.modKeys !== modKeys) continue;
+            const eventModkeys = isDefaultMode ? event.modKeys : (event.modKeys & (0xffff ^ ModKeys.Shift));
+            let entryModKeys = isDefaultMode ? entry.modKeys : (entry.modKeys & (0xffff ^ ModKeys.Shift));
+            if (entry.keyName === 'Shift' && isDefaultMode) entryModKeys |= ModKeys.Shift;
+            if (entry.keyName === 'Ctrl') entryModKeys |= ModKeys.Ctrl;
+            if (entry.keyName === 'Alt') entryModKeys |= ModKeys.Alt;
+            if (eventModkeys !== entryModKeys) continue;
 
-            if (!isAllowedIn(entry, e)) continue;
+            if (!isAllowedIn(entry, event)) continue;
 
             preventDefault = true;
 
@@ -123,7 +132,7 @@
             const tagName = srcElement.tagName;
             const type = srcElement.getAttribute('type');
 
-            const preventDefault1 = onKeyDown({ modKeys, keyName, srcElement, tagName, type });
+            const preventDefault1 = onKeyDown({ modKeys, keyName, nativeKey: key, srcElement, tagName, type });
             const preventDefault2 = isWasm === true ? hotKeysWrpper.invokeMethod('OnKeyDown', modKeys, keyName, tagName, type, key, code) : false;
             if (preventDefault1 || preventDefault2) ev.preventDefault();
             if (isWasm === false) hotKeysWrpper.invokeMethodAsync('OnKeyDown', modKeys, keyName, tagName, type, key, code);
