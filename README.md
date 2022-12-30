@@ -1,4 +1,16 @@
-﻿# Blazor HotKeys [![NuGet Package](https://img.shields.io/nuget/v/Toolbelt.Blazor.HotKeys.svg)](https://www.nuget.org/packages/Toolbelt.Blazor.HotKeys/)
+﻿# [⚠️Deprecated] Blazor HotKeys [![NuGet Package](https://img.shields.io/nuget/v/Toolbelt.Blazor.HotKeys.svg)](https://www.nuget.org/packages/Toolbelt.Blazor.HotKeys/)
+
+> **Warning**  
+> **"Blazor HotKeys" has been deprecated. Its official successor is ["Blazor HotKeys 2"!](https://github.com/jsakamoto/Toolbelt.Blazor.HotKeys2/)**
+
+Unfortunately, the design of the "Blazor HotKeys" is not so good because I'm not so clever and didn't have enough knowledge when I started developing the "Blazor HotKeys". The "Blazor HotKeys" depended on the `keyCode` code property of the keyboard event argument that was deprecated now. Even though it is, I've been refining the "Blazor HotKeys" with keeping the compatibility on a binary level. But it is about to reach the limit to improve these days. Due to it having depended on the `keyCode` property at the project start time, there are so many hacky codes, and the API syntax of the "Blazor HotKeys" is not smart.
+
+For the reasons above, I decided to create a hotkeys library again from scratch. The achievement is the "Blazor HotKeys 2".
+
+The API syntax of the "Blazor HotKeys 2" is not so different from the "Blazor HotKeys". But the API of the "Blazor HotKeys 2" treat the `key` and the `code` property of the keyboard event straight. This design should ensure clarity from developers. I hope many Blazor developers will be happy migrating from the "Blazor HotKeys" to the "Blazor Hotkeys 2".
+
+<details>
+<summary>For more detail of Blazor HotKeys</summary>
 
 ## Summary
 
@@ -226,3 +238,5 @@ The rendering result:
 ## License
 
 [Mozilla Public License Version 2.0](https://github.com/jsakamoto/Toolbelt.Blazor.HotKeys/blob/master/LICENSE)
+
+</details>
